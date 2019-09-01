@@ -46,6 +46,14 @@
     <Compile Include="Algorithm\BucketSearch.cs" />
     <Compile Include="Algorithm\IPoint.cs" />
     <Compile Include="Algorithm\ISearch.cs" />
+    <Compile Include="Builder\Chemistry\Glycan\GeneralTableNGlycanCreator.cs" />
+    <Compile Include="Builder\Chemistry\Glycan\IGlycanCreator.cs" />
+    <Compile Include="Builder\Chemistry\Glycan\ITableNGlycanProxy.cs" />
+    <Compile Include="Builder\Chemistry\Glycan\ITableNGlycanProxyGenerator.cs" />
+    <Compile Include="Builder\Chemistry\Glycan\Mass\GeneralTableNGlycanMassProxy.cs" />
+    <Compile Include="Builder\Chemistry\Glycan\Mass\GeneralTableNGlycanMassProxyGenerator.cs" />
+    <Compile Include="Builder\Chemistry\Glycan\Mass\ITableNGlycanMassProxy.cs" />
+    <Compile Include="Builder\Chemistry\Glycan\TableNGlycanProxyTemplate.cs" />
     <Compile Include="Builder\Chemistry\Peptide\GeneralPeptideCreator.cs" />
     <Compile Include="Builder\Chemistry\Peptide\Generator\DoubleDigestionPeptideSequencesGeneratorProxy.cs" />
     <Compile Include="Builder\Chemistry\Peptide\Generator\GeneralPeptideSequencesGenerator.cs" />
