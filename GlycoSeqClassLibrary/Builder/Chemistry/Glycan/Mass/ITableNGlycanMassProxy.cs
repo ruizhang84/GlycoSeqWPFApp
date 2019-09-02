@@ -11,7 +11,7 @@ namespace GlycoSeqClassLibrary.Builder.Chemistry.Glycan.Mass
     {
         List<double> GetMass();
         void AddMass(double mass);
-        void AddRangeMass(List<double> massList;
+        void AddRangeMass(List<double> massList);
         void ClearMass();
     }
 }
