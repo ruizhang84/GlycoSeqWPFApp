@@ -20,7 +20,11 @@ namespace GlycoSeqClassLibrary.Util.CalcMass
 
         public double Compute(IPeptide peptide)
         {
-            string sequence = peptide.GetSequence();
+            return Compute(peptide.GetSequence());
+        }
+
+        public double Compute(string sequence)
+        {
             double mass = 18.0105;  //water
             foreach (char s in sequence)
             {

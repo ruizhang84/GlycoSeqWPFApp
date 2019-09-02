@@ -9,9 +9,9 @@ namespace GlycoSeqClassLibrary.Builder.Chemistry.Glycan.Mass
 {
     public interface ITableNGlycanMassProxy : ITableNGlycanProxy
     {
-        List<double> GetSubTreeMass();
+        List<double> GetMass();
         void AddMass(double mass);
-        void AddRangeMass(List<double> massList);
+        void AddRangeMass(List<double> massList;
         void ClearMass();
     }
 }

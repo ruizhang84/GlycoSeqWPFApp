@@ -54,6 +54,9 @@
     <Compile Include="Builder\Chemistry\Glycan\Mass\GeneralTableNGlycanMassProxyGenerator.cs" />
     <Compile Include="Builder\Chemistry\Glycan\Mass\ITableNGlycanMassProxy.cs" />
     <Compile Include="Builder\Chemistry\Glycan\TableNGlycanProxyTemplate.cs" />
+    <Compile Include="Builder\Chemistry\Glycopeptide\GlycoPeptideProxyTemplate.cs" />
+    <Compile Include="Builder\Chemistry\Glycopeptide\IGlycoPeptideProxy.cs" />
+    <Compile Include="Builder\Chemistry\Glycopeptide\Mass\IGlycoPeptideMassProxy.cs" />
     <Compile Include="Builder\Chemistry\Peptide\GeneralPeptideCreator.cs" />
     <Compile Include="Builder\Chemistry\Peptide\Generator\DoubleDigestionPeptideSequencesGeneratorProxy.cs" />
     <Compile Include="Builder\Chemistry\Peptide\Generator\GeneralPeptideSequencesGenerator.cs" />
@@ -93,6 +96,7 @@
     <Compile Include="Util\CalcMass\GlycanCalcMass.cs" />
     <Compile Include="Util\CalcMass\IonCalcMass.cs" />
     <Compile Include="Util\CalcMass\PeptideCalcMass.cs" />
+    <Compile Include="Util\CalcMass\PTMPeptideCalcMass.cs" />
     <Compile Include="Util\CalcMass\SpectrumCalcMass.cs" />
     <Compile Include="Util\Model\FindPTMPosition.cs" />
   </ItemGroup>

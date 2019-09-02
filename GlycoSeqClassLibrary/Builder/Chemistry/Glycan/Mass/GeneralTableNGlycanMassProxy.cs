@@ -18,7 +18,7 @@ namespace GlycoSeqClassLibrary.Builder.Chemistry.Glycan.Mass
             massTable.Add(GlycanCalcMass.Instance.Compute(glycan));
         }
 
-        public List<double> GetSubTreeMass()
+        public List<double> GetMass()
         {
             return massTable.ToList();
         }

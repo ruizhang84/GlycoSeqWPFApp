@@ -40,7 +40,11 @@ namespace GlycoSeqClassLibrary.Util.CalcMass
 
         public double Compute(IPeptide peptide, IonType type)
         {
-            double mass = PeptideCalcMass.Instance.Compute(peptide); //with an addtional h2o
+            return ComputePeptide(peptide.GetSequence(), type);
+        }
+        public double ComputePeptide(string sequence, IonType type)
+        {
+            double mass = PeptideCalcMass.Instance.Compute(sequence); //with an addtional h2o
             switch (type)
             {
                 case IonType.aIon:

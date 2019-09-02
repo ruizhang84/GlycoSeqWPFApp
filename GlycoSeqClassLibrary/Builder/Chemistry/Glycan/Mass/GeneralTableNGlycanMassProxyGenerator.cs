@@ -39,7 +39,7 @@ namespace GlycoSeqClassLibrary.Builder.Chemistry.Glycan.Mass
 
         public void Update(TableNGlycanProxyTemplate glycan, TableNGlycanProxyTemplate source)
         {
-            (glycan as ITableNGlycanMassProxy).AddRangeMass((source as ITableNGlycanMassProxy).GetSubTreeMass());
+            (glycan as ITableNGlycanMassProxy).AddRangeMass((source as ITableNGlycanMassProxy).GetMass());
         }
     }
 }
