@@ -9,12 +9,10 @@ namespace GlycoSeqClassLibrary.Model.Chemistry.Glycan.TableNGlycan
     public abstract class AbstractNGlycan : ITableNGlycan
     {
         protected int[] table;    
-        protected string name;
 
         public AbstractNGlycan(int[] structureTable)
         {
             table = structureTable.ToArray();
-            name = string.Join(" ", table);
         }
         public abstract int[] GetStructure();
 
@@ -33,12 +31,7 @@ namespace GlycoSeqClassLibrary.Model.Chemistry.Glycan.TableNGlycan
 
         public string GetName()
         {
-            return name;
-        }
-
-        public void SetName(string name)
-        {
-            this.name = name;
+            return string.Join(" ", table);
         }
 
         public int[] GetNGlycanTable()

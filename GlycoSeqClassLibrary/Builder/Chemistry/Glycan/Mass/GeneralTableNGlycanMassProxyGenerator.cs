@@ -32,14 +32,21 @@ namespace GlycoSeqClassLibrary.Builder.Chemistry.Glycan.Mass
                 && composition[4] <= NeuGcBound;
         }
 
-        public TableNGlycanProxyTemplate Generate(ITableNGlycan glycan)
+        public ITableNGlycanProxy Generate(ITableNGlycan glycan)
         {
             return new GeneralTableNGlycanMassProxy(glycan);
         }
 
-        public void Update(TableNGlycanProxyTemplate glycan, TableNGlycanProxyTemplate source)
+        public void Update(ITableNGlycanProxy glycan, ITableNGlycanProxy source)
         {
-            (glycan as ITableNGlycanMassProxy).AddRangeMass((source as ITableNGlycanMassProxy).GetMass());
+            if (glycan is ITableNGlycanMassProxy && source is ITableNGlycanMassProxy)
+            {
+                (glycan as ITableNGlycanMassProxy).AddRangeMass((source as ITableNGlycanMassProxy).GetMass());
+            }
+            else
+            {
+                throw new InvalidCastException("Proxy can not cast to MassProxy");
+            }
         }
     }
 }

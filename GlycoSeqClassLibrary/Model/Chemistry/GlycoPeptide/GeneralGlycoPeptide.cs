@@ -14,7 +14,7 @@ namespace GlycoSeqClassLibrary.Model.Chemistry.GlycoPeptide
         protected int position;
         protected IGlycan glycan;
 
-        public GeneralGlycoPeptide(IPeptide peptide, IGlycan glycan, int pos)
+        public GeneralGlycoPeptide(IGlycan glycan, IPeptide peptide, int pos)
         {
             this.peptide = peptide;
             this.glycan = glycan;
@@ -23,7 +23,7 @@ namespace GlycoSeqClassLibrary.Model.Chemistry.GlycoPeptide
 
         public IGlycoPeptide Clone()
         {
-            return new GeneralGlycoPeptide(peptide, glycan, position);
+            return new GeneralGlycoPeptide(glycan, peptide, position);
         }
 
         public IGlycan GetGlycan()

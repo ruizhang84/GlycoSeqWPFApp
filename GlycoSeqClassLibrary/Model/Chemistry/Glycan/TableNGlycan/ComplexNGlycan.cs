@@ -44,20 +44,20 @@ namespace GlycoSeqClassLibrary.Model.Chemistry.Glycan.TableNGlycan
             return new ComplexNGlycan(table);
         }
 
-        protected string GetPrintName()
-        {
-            name = "ComplexNGlycan: ";
-            int[] composition = GetStructure();
-            name = "[" + string.Join(",", composition) + "]";
-            if (table[2] > 0) name += "-fucose-";
-            if (table[3] > 0) name += "-bisect-";
-            name += "-core-" + string.Join(";", table.Take(2).ToArray())
-                + "[" + string.Join(";", table.Skip(4).Take(4).ToArray()) + "]"
-                + "[" + string.Join(";", table.Skip(8).Take(4).ToArray()) + "]"
-                + "[" + string.Join(";", table.Skip(12).Take(4).ToArray()) + "]"
-                + "[" + string.Join(";", table.Skip(16).Take(4).ToArray()) + "]"
-                + "[" + string.Join(";", table.Skip(20).Take(4).ToArray()) + "]";
-            return name;
-        }
+        //public string GetPrintString()
+        //{
+        //    name = "ComplexNGlycan: ";
+        //    int[] composition = GetStructure();
+        //    name = "[" + string.Join(",", composition) + "]";
+        //    if (table[2] > 0) name += "-fucose-";
+        //    if (table[3] > 0) name += "-bisect-";
+        //    name += "-core-" + string.Join(";", table.Take(2).ToArray())
+        //        + "[" + string.Join(";", table.Skip(4).Take(4).ToArray()) + "]"
+        //        + "[" + string.Join(";", table.Skip(8).Take(4).ToArray()) + "]"
+        //        + "[" + string.Join(";", table.Skip(12).Take(4).ToArray()) + "]"
+        //        + "[" + string.Join(";", table.Skip(16).Take(4).ToArray()) + "]"
+        //        + "[" + string.Join(";", table.Skip(20).Take(4).ToArray()) + "]";
+        //    return name;
+        //}
     }
 }

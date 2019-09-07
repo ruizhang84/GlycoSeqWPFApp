@@ -18,7 +18,7 @@ namespace GlycoSeqClassLibrary.Model.Chemistry.Glycan.TableNGlycan
                     {
                         glycans.Add(CreateByAddGlcNAcCore());
                     }
-                    else
+                    else if (ValidAddGlcNAc())
                     {
                         if (ValidAddGlcNAcBisect())
                             glycans.Add(CreateByAddGlcNAcBisect());
@@ -70,6 +70,14 @@ namespace GlycoSeqClassLibrary.Model.Chemistry.Glycan.TableNGlycan
         protected bool ValidAddGlcNAcCore()
         {
             if (table[0] < 2)
+                return true;
+
+            return false;
+        }
+
+        protected bool ValidAddGlcNAc()
+        {
+            if (table[0] == 2 && table[1] == 3)
                 return true;
 
             return false;

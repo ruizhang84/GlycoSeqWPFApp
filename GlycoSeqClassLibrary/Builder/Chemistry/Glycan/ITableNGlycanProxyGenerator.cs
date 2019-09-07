@@ -10,7 +10,7 @@ namespace GlycoSeqClassLibrary.Builder.Chemistry.Glycan
     public interface ITableNGlycanProxyGenerator
     {
         bool Criteria(ITableNGlycan glycan);
-        TableNGlycanProxyTemplate Generate(ITableNGlycan glycan);
-        void Update(TableNGlycanProxyTemplate glycan, TableNGlycanProxyTemplate source);
+        ITableNGlycanProxy Generate(ITableNGlycan glycan);
+        void Update(ITableNGlycanProxy glycan, ITableNGlycanProxy source);
     }
 }

@@ -11,7 +11,6 @@ namespace GlycoSeqClassLibrary.Model.Chemistry.Glycan
     public interface IGlycan
     {
         string GetName();
-        void SetName(string name);
         IGlycan Clone();
         int[] GetStructure(); //Hex, HexNAc, Fuc, NeuAc, NeuGc
 

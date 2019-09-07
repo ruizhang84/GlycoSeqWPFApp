@@ -54,8 +54,13 @@
     <Compile Include="Builder\Chemistry\Glycan\Mass\GeneralTableNGlycanMassProxyGenerator.cs" />
     <Compile Include="Builder\Chemistry\Glycan\Mass\ITableNGlycanMassProxy.cs" />
     <Compile Include="Builder\Chemistry\Glycan\TableNGlycanProxyTemplate.cs" />
+    <Compile Include="Builder\Chemistry\Glycopeptide\GeneralNGlycoPeptideSingleSiteCreator.cs" />
     <Compile Include="Builder\Chemistry\Glycopeptide\GlycoPeptideProxyTemplate.cs" />
+    <Compile Include="Builder\Chemistry\Glycopeptide\IGlycoPeptideCreator.cs" />
     <Compile Include="Builder\Chemistry\Glycopeptide\IGlycoPeptideProxy.cs" />
+    <Compile Include="Builder\Chemistry\Glycopeptide\Mass\GeneralTableNGlycoPeptideMassProxyGenerator.cs" />
+    <Compile Include="Builder\Chemistry\Glycopeptide\IGlycoPeptideProxyGenerator.cs" />
+    <Compile Include="Builder\Chemistry\Glycopeptide\Mass\GeneralGlycoPeptideMassProxy.cs" />
     <Compile Include="Builder\Chemistry\Glycopeptide\Mass\IGlycoPeptideMassProxy.cs" />
     <Compile Include="Builder\Chemistry\Peptide\GeneralPeptideCreator.cs" />
     <Compile Include="Builder\Chemistry\Peptide\Generator\DoubleDigestionPeptideSequencesGeneratorProxy.cs" />

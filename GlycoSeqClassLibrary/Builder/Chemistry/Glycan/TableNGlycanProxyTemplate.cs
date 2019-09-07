@@ -46,11 +46,6 @@ namespace GlycoSeqClassLibrary.Builder.Chemistry.Glycan
             return glycan.Growth(suger);
         }
 
-        public void SetName(string name)
-        {
-            glycan.SetName(name);
-        }
-
         public void SetNGlycanTable(int indx, int num)
         {
             glycan.SetNGlycanTable(indx, num);
