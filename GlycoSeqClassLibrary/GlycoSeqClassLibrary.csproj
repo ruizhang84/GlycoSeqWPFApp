@@ -70,6 +70,8 @@
     <Compile Include="Algorithm\BucketSearch.cs" />
     <Compile Include="Algorithm\IPoint.cs" />
     <Compile Include="Algorithm\ISearch.cs" />
+    <Compile Include="Algorithm\PPMComparer.cs" />
+    <Compile Include="Algorithm\ToleranceComparer.cs" />
     <Compile Include="Analyze\IScore.cs" />
     <Compile Include="Analyze\IScoreFactory.cs" />
     <Compile Include="Analyze\Score\GeneralScore.cs" />

@@ -9,14 +9,12 @@ namespace GlycoSeqClassLibrary.Algorithm
     public abstract class AbstractSearch : ISearch
     {
         protected List<IPoint> data;
-        public double Tolerance { get; set; }
+        protected IComparer<IPoint> comparer;
 
-        public AbstractSearch(List<IPoint> data, double tol)
+        public AbstractSearch(List<IPoint> data, IComparer<IPoint> comparer)
         {
             this.data = data;
-            if (data.Count > 1)
-                this.data.Sort();
-            Tolerance = tol;
+            this.comparer = comparer;
         }
 
         public virtual void setData(List<IPoint> data)
@@ -28,9 +26,7 @@ namespace GlycoSeqClassLibrary.Algorithm
 
         public virtual int Compare(IPoint p1, IPoint p2)
         {
-            if (Math.Abs(p1.GetValue()-p2.GetValue()) < Tolerance) return 0;
-            else if (p1.GetValue() < p2.GetValue()) return -1;
-            return 1;
+            return comparer.Compare(p1, p2);
         }
 
         public abstract bool Found(IPoint pt);

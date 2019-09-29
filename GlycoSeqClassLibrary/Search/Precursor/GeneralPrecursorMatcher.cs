@@ -35,6 +35,8 @@ namespace GlycoSeqClassLibrary.Search.Precursor
             foreach (IPeptide peptide in peptides)
             {
                 double target = mass - PeptideCalcMass.Instance.Compute(peptide);
+                if (target < 0) continue;
+
                 List<IPoint> points = matcher.Search(new GeneralPoint(target));
                 foreach(IPoint point in points)
                 {

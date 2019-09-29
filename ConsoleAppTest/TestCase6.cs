@@ -79,8 +79,10 @@ namespace ConsoleAppTest
             {
                 points.Add(new GlycanPoint(glycan));
             }
-            //ISearch matcher = new BinarySearch(points, 0.01);
-            ISearch matcher = new BucketSearch(points, 0.01);
+
+            IComparer<IPoint> comparer = new ToleranceComparer(0.01);
+            //ISearch matcher = new BinarySearch(points, comparer);
+            ISearch matcher = new BucketSearch(points, comparer, 0.01);
             IGlycoPeptideProxyGenerator glycoPeptideProxyGenerator = new GeneralTableNGlycoPeptideMassProxyGenerator();
             IGlycoPeptideCreator glycoPeptideCreator = new GeneralNGlycoPeptideSingleSiteCreator(glycoPeptideProxyGenerator);
             IPrecursorMatcher precursorMatcher = new GeneralPrecursorMatcher(peptides, matcher, glycoPeptideCreator);
@@ -90,8 +92,10 @@ namespace ConsoleAppTest
             ISpectrumFactory spectrumFactory = new GeneralSpectrumFactory(spectrumReader);
 
             double maxScores = 0;
-            //ISearch matcherPeaks = new BinarySearch(points, 0.01);
-            ISearch matcherPeaks = new BucketSearch(points, 0.01);
+            IComparer<IPoint> comparer2 = new ToleranceComparer(0.01); //new PPMComparer(20);
+            //ISearch matcherPeaks = new BinarySearch(points, comparer2);
+            ISearch matcherPeaks = new BucketSearch(points, comparer2, 0.01);
+            //ISearch matcherPeaks = new BucketSearch(points, 0.01);
             IScoreFactory scoreFactory = new GeneralScoreFactory(1.0, 0.0);
             IGlycoPeptidePointsCreator glycoPeptidePointsCreator = new GeneralGlycoPeptideMassProxyPointsCreator();
             ISearchEThcD searchEThcDRunner = new GeneralSearchEThcD(matcherPeaks, scoreFactory, glycoPeptidePointsCreator);

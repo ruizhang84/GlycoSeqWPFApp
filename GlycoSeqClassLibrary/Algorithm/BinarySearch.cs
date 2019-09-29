@@ -8,7 +8,11 @@ namespace GlycoSeqClassLibrary.Algorithm
 {
     public class BinarySearch : AbstractSearch, ISearch
     {
-        public BinarySearch(List<IPoint> data, double tol) : base(data, tol) { }
+        public BinarySearch(List<IPoint> data, IComparer<IPoint> comparer) : base(data, comparer)
+        {
+            if (data.Count > 1)
+                data.Sort();
+        }
 
         public override List<IPoint> Search(IPoint pt)
         {
@@ -51,12 +55,12 @@ namespace GlycoSeqClassLibrary.Algorithm
             List<IPoint> searched = new List<IPoint>();
             if (matchIndx < 0) return searched;
            
-            for(int left = matchIndx; left >= 0 && Compare(data[left], pt) == 0; left--)
+            for(int left = matchIndx; left >= 0 && Compare(pt, data[left]) == 0; left--)
             {
                 searched.Add(data[left]);
             }
 
-            for (int right = matchIndx+1; right < data.Count && Compare(data[right], pt) == 0; right++)
+            for (int right = matchIndx+1; right < data.Count && Compare(pt, data[right]) == 0; right++)
             {
                 searched.Add(data[right]);
             }

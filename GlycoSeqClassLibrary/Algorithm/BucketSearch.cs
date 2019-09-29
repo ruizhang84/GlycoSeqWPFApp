@@ -11,9 +11,11 @@ namespace GlycoSeqClassLibrary.Algorithm
         protected List<IPoint>[] pointTable;
         protected double bucketSize;
         protected double minValue;
+        protected double Tolerance { get; set;}
         
-        public BucketSearch(List<IPoint> data, double tol) : base(data, tol)
+        public BucketSearch(List<IPoint> data, IComparer<IPoint> comparer, double tol = 0.1) : base(data, comparer)
         {
+            Tolerance = tol;
             if (data.Count > 0)
             {
                 double lowerBound = data.Min(x => x.GetValue());
@@ -25,7 +27,6 @@ namespace GlycoSeqClassLibrary.Algorithm
 
         public override void setData(List<IPoint> data)
         {
-            base.setData(data);
             if (data.Count > 0)
             {
                 double lowerBound = data.Min(x => x.GetValue());
@@ -87,7 +88,7 @@ namespace GlycoSeqClassLibrary.Algorithm
                 
                 foreach (IPoint p in pointTable[index + i])
                 {
-                    if (Compare(p, pt) == 0)
+                    if (Compare(pt, p) == 0)
                     {
                         return true;
                     }
@@ -107,7 +108,7 @@ namespace GlycoSeqClassLibrary.Algorithm
                     continue;
                 foreach (IPoint p in pointTable[index + i])
                 {
-                    if (Compare(p, pt) == 0)
+                    if (Compare(pt, p) == 0)
                     {
                         result.Add(p);
                     }
@@ -116,5 +117,5 @@ namespace GlycoSeqClassLibrary.Algorithm
             return result;
         }
     
-}
+    }   
 }

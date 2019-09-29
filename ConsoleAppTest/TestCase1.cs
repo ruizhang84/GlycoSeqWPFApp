@@ -18,7 +18,7 @@ namespace ConsoleAppTest
 
         public int CompareTo(IPoint other)
         {
-            return (int)(Value - other.GetValue());
+            return (int) Math.Ceiling(Value - other.GetValue());
         }
 
         public double GetValue()
@@ -40,26 +40,32 @@ namespace ConsoleAppTest
             
             var watch = new System.Diagnostics.Stopwatch();
             watch.Start();
-            BinarySearch bins = new BinarySearch(points, 1.1);
-            //List<IPoint> result = bins.Search(new MassPoint(3));
-            for (int j = 122; j < 100000; j += 10)
-                bins.Search(new MassPoint(j));
+            IComparer<IPoint> comparer = new ToleranceComparer(1.1);
+
+            Console.WriteLine(comparer.Compare(new MassPoint(122), new MassPoint(123)));
+            BinarySearch bins = new BinarySearch(points, comparer);
+            List<IPoint> found = new List<IPoint>();
+            for (int j = 122; j < 123; j += 10)
+                found.AddRange(bins.Search(new MassPoint(j)));
             //BucketSearch bucket = new BucketSearch(points, 1.1);
             //List<IPoint> result = bucket.Search(new MassPoint(3));
 
             watch.Stop();
+            Console.WriteLine(found.Count);
             Console.WriteLine($"Execution Time: {watch.ElapsedMilliseconds} ms");
 
+            found.Clear();
             watch = new System.Diagnostics.Stopwatch();
             watch.Start();
             //BinarySearch bins = new BinarySearch(points, 1.1);
             //List<IPoint> result = bins.Search(new MassPoint(3));
+            BucketSearch bucket = new BucketSearch(points, comparer, 1.1);
 
-            BucketSearch bucket = new BucketSearch(points, 1.1);
-            for (int j = 122; j < 1000; j += 10)
-                bucket.Search(new MassPoint(j));
+            for (int j = 122; j < 123; j += 10)
+                found.AddRange(bucket.Search(new MassPoint(j)));
 
             watch.Stop();
+            Console.WriteLine(found.Count);
             Console.WriteLine($"Execution Time: {watch.ElapsedMilliseconds} ms");
 
 

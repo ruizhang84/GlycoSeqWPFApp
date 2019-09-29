@@ -77,8 +77,8 @@ namespace ConsoleAppTest
             {
                 points.Add(new GlycanPoint(glycan));
             }
-            //ISearch matcher = new BinarySearch(points, 0.01);
-            ISearch matcher = new BucketSearch(points, 0.01);
+            IComparer<IPoint> comparer = new ToleranceComparer(0.01);
+            ISearch matcher = new BucketSearch(points, comparer, 0.01);
             IGlycoPeptideProxyGenerator glycoPeptideProxyGenerator = new GeneralTableNGlycoPeptideMassProxyGenerator();
             IGlycoPeptideCreator glycoPeptideCreator = new GeneralNGlycoPeptideSingleSiteCreator(glycoPeptideProxyGenerator);
             IPrecursorMatcher precursorMatcher = new GeneralPrecursorMatcher(peptides, matcher, glycoPeptideCreator);
@@ -86,13 +86,7 @@ namespace ConsoleAppTest
             // spectrum
             ISpectrumReader spectrumReader = new ThermoRawSpectrumReader(@"C:\Users\iruiz\Desktop\app\ZC_20171218_H95_R1.raw");
             ISpectrumFactory spectrumFactory = new GeneralSpectrumFactory(spectrumReader);
-            //for (var i = 4000; i < 5000; i++)
-            //{
-            //    ISpectrum spectrum = spectrumFactory.GetSpectrum(i);
-            //    if (spectrum.GetMSnOrder() < 2) continue;
 
-            //    List<IGlycoPeptide> glycoPeptideProxies = precursorMatcher.Match(spectrum);
-            //}
             ISpectrum spectrum = spectrumFactory.GetSpectrum(7039);
             List<IGlycoPeptide> glycoPeptides = precursorMatcher.Match(spectrum);
             watch.Stop();
