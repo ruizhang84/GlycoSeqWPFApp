@@ -28,7 +28,7 @@ namespace GlycoSeqClassLibrary.Algorithm
                 {
                     return mid;
                 }
-                else if (cmp < 0)
+                else if (cmp > 0)
                 {
                     end = mid - 1;
                 }
@@ -39,6 +39,11 @@ namespace GlycoSeqClassLibrary.Algorithm
             }
 
             return -1;
+        }
+
+        public override bool Found(IPoint pt)
+        {
+            return BinarySearchPoints(pt) >= 0;
         }
 
         public List<IPoint> ExtendAllMatch(IPoint pt, int matchIndx)

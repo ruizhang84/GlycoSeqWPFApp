@@ -11,5 +11,7 @@ namespace GlycoSeqClassLibrary.Algorithm
         void setData(List<IPoint> data);
 
         List<IPoint> Search(IPoint pt);
+
+        bool Found(IPoint pt);
     }
 }

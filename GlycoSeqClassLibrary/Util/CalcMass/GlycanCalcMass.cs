@@ -31,9 +31,9 @@ namespace GlycoSeqClassLibrary.Util.CalcMass
         public const double PermNeuGc = 391.1842;  //N-glycolyl-neuraminic acid
 
         public bool permethylation;
-        public void SetPermethylation()
+        public void SetPermethylation(bool set)
         {
-            permethylation = false;
+            permethylation = set;
         }
 
         private double CalcSingleGlycanMass(IGlycan glycan)

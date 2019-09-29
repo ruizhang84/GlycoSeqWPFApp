@@ -16,8 +16,8 @@ namespace GlycoSeqClassLibrary.Algorithm
         {
             if (data.Count > 0)
             {
-                double lowerBound = data[0].GetValue();
-                double upperBound = data[data.Count-1].GetValue();
+                double lowerBound = data.Min(x => x.GetValue());
+                double upperBound = data.Max(x => x.GetValue());
                 Init(lowerBound, upperBound);
                 AddRange(data);
             }
@@ -28,8 +28,8 @@ namespace GlycoSeqClassLibrary.Algorithm
             base.setData(data);
             if (data.Count > 0)
             {
-                double lowerBound = data[0].GetValue();
-                double upperBound = data[data.Count - 1].GetValue();
+                double lowerBound = data.Min(x => x.GetValue());
+                double upperBound = data.Max(x => x.GetValue());
                 Init(lowerBound, upperBound);
                 AddRange(data);
             }
@@ -38,7 +38,6 @@ namespace GlycoSeqClassLibrary.Algorithm
 
         public override List<IPoint> Search(IPoint pt)
         {
-
             return Match(pt);
         }
 
@@ -73,6 +72,28 @@ namespace GlycoSeqClassLibrary.Algorithm
             {
                 Add(pt);
             }
+        }
+
+        public override bool Found(IPoint pt)
+        {
+            int index = FindBucket(pt);
+            if (index >= 0 && index < pointTable.Length && pointTable[index].Count > 0)
+                return true;
+
+            for (int i = -1; i <= 1; i++)
+            {
+                if (i == 0 || index + i < 0 || index + i > pointTable.Length)
+                    continue;
+                
+                foreach (IPoint p in pointTable[index + i])
+                {
+                    if (Compare(p, pt) == 0)
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
         }
 
         private List<IPoint> Match(IPoint pt)

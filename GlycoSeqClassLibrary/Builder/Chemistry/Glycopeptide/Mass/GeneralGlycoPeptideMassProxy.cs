@@ -33,7 +33,7 @@ namespace GlycoSeqClassLibrary.Builder.Chemistry.Glycopeptide.Mass
 
         public List<double> GetMass()
         {
-            return massTable.ToList().OrderBy(e => e).ToList();
+            return massTable.ToList();
         }
     }
 }

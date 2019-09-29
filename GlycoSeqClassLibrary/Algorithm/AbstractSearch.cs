@@ -33,6 +33,7 @@ namespace GlycoSeqClassLibrary.Algorithm
             return 1;
         }
 
+        public abstract bool Found(IPoint pt);
         public abstract List<IPoint> Search(IPoint pt);
     }
 }
