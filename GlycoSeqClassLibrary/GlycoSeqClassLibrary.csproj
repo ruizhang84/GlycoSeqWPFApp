@@ -136,6 +136,13 @@
     <Compile Include="Search\Precursor\GeneralPoint.cs" />
     <Compile Include="Search\Precursor\GlycanPoint.cs" />
     <Compile Include="Search\Precursor\IPrecursorMatcher.cs" />
+    <Compile Include="Search\Process\ISpectrumProcessing.cs" />
+    <Compile Include="Search\Process\IMonoMassSpectrumGetter.cs" />
+    <Compile Include="Search\Process\MonoMass\GeneralMonoMassSpectrumGetter.cs" />
+    <Compile Include="Search\Process\Normalize\GeneralNormalizeSpectrumProcessing.cs" />
+    <Compile Include="Search\Process\PeakPicking\GeneralPeakPickingSpectrumProcessing.cs" />
+    <Compile Include="Search\Process\PeakPicking\IPeakPickingDelegator.cs" />
+    <Compile Include="Search\Process\PeakPicking\PeakPickingDelegator\TopIntensityPeakPickingDelegator.cs" />
     <Compile Include="Search\SearchEThcD\GeneralGlycoPeptideMassProxyPointsCreator.cs" />
     <Compile Include="Search\SearchEThcD\GeneralSearchEThcD.cs" />
     <Compile Include="Search\SearchEThcD\IGlycoPeptidePointsCreator.cs" />
