@@ -71,6 +71,7 @@
     <Compile Include="TestCase3.cs" />
     <Compile Include="TestCase4.cs" />
     <Compile Include="TestCase6.cs" />
+    <Compile Include="TestCase7.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

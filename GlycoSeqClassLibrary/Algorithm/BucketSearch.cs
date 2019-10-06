@@ -12,6 +12,7 @@ namespace GlycoSeqClassLibrary.Algorithm
         protected double bucketSize;
         protected double minValue;
         protected double Tolerance { get; set;}
+        protected bool searchable;
         
         public BucketSearch(List<IPoint> data, IComparer<IPoint> comparer, double tol = 0.1) : base(data, comparer)
         {
@@ -22,6 +23,11 @@ namespace GlycoSeqClassLibrary.Algorithm
                 double upperBound = data.Max(x => x.GetValue());
                 Init(lowerBound, upperBound);
                 AddRange(data);
+                searchable = true;
+            }
+            else
+            {
+                searchable = false;
             }
         }
 
@@ -33,6 +39,11 @@ namespace GlycoSeqClassLibrary.Algorithm
                 double upperBound = data.Max(x => x.GetValue());
                 Init(lowerBound, upperBound);
                 AddRange(data);
+                searchable = true;
+            }
+            else
+            {
+                searchable = false;
             }
 
         }
@@ -58,7 +69,7 @@ namespace GlycoSeqClassLibrary.Algorithm
 
         private int FindBucket(IPoint pt)
         {
-            return (int)Math.Ceiling((pt.GetValue() - minValue) / bucketSize);
+            return (int) Math.Ceiling((pt.GetValue() - minValue) / bucketSize);
         }
 
 
@@ -77,6 +88,8 @@ namespace GlycoSeqClassLibrary.Algorithm
 
         public override bool Found(IPoint pt)
         {
+            if (!searchable) return false;
+
             int index = FindBucket(pt);
             if (index >= 0 && index < pointTable.Length && pointTable[index].Count > 0)
                 return true;
@@ -100,6 +113,7 @@ namespace GlycoSeqClassLibrary.Algorithm
         private List<IPoint> Match(IPoint pt)
         {
             List<IPoint> result = new List<IPoint>();
+            if (!searchable) return result;
             int index = FindBucket(pt);
 
             for (int i = -1; i <= 1; i++)

@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace GlycoSeqClassLibrary.Search.Process
 {
-    interface IMonoMassSpectrumGetter
+    public interface IMonoMassSpectrumGetter
     {
-        double GetMonoMass(ISpectrum MSnSpectrum);
+        double GetMonoMass(ISpectrumMSn MSnSpectrum);
         void SetMonoMassSpectrum(ISpectrum MS1Spectrum);
     }
 }

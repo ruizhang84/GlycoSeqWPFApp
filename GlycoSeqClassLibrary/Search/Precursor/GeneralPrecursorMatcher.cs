@@ -31,7 +31,7 @@ namespace GlycoSeqClassLibrary.Search.Precursor
             List<IGlycoPeptide> result = new List<IGlycoPeptide>();
             double mz = (spectrum as ISpectrumMSn).GetParentMZ();
             int charge = (spectrum as ISpectrumMSn).GetParentCharge();
-            double mass = SpectrumCalcMass.Instance.Compute(mz, charge) - monoMass;
+            double mass = SpectrumCalcMass.Instance.Compute(monoMass, charge);
             foreach (IPeptide peptide in peptides)
             {
                 double target = mass - PeptideCalcMass.Instance.Compute(peptide);
@@ -49,7 +49,7 @@ namespace GlycoSeqClassLibrary.Search.Precursor
 
         public List<IGlycoPeptide> Match(ISpectrum spectrum)
         {
-            return Match(spectrum, 0);
+            return Match(spectrum, (spectrum as ISpectrumMSn).GetParentMZ());
         }
 
         public void SetPeptides(List<IPeptide> peptides)

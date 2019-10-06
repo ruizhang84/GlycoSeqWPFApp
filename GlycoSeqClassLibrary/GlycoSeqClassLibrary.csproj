@@ -72,8 +72,12 @@
     <Compile Include="Algorithm\ISearch.cs" />
     <Compile Include="Algorithm\PPMComparer.cs" />
     <Compile Include="Algorithm\ToleranceComparer.cs" />
+    <Compile Include="Analyze\IReportProducer.cs" />
+    <Compile Include="Analyze\IResults.cs" />
     <Compile Include="Analyze\IScore.cs" />
     <Compile Include="Analyze\IScoreFactory.cs" />
+    <Compile Include="Analyze\Reporter\CSVReportProducer.cs" />
+    <Compile Include="Analyze\Result\GeneralResults.cs" />
     <Compile Include="Analyze\Score\GeneralScore.cs" />
     <Compile Include="Analyze\Score\GeneralScoreFactory.cs" />
     <Compile Include="Builder\Chemistry\Glycan\GeneralTableNGlycanCreator.cs" />
@@ -133,12 +137,13 @@
     <Compile Include="Model\Spectrum\ISpectrumMSn.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Search\Precursor\GeneralPrecursorMatcher.cs" />
-    <Compile Include="Search\Precursor\GeneralPoint.cs" />
+    <Compile Include="Algorithm\GeneralPoint.cs" />
     <Compile Include="Search\Precursor\GlycanPoint.cs" />
     <Compile Include="Search\Precursor\IPrecursorMatcher.cs" />
     <Compile Include="Search\Process\ISpectrumProcessing.cs" />
     <Compile Include="Search\Process\IMonoMassSpectrumGetter.cs" />
     <Compile Include="Search\Process\MonoMass\GeneralMonoMassSpectrumGetter.cs" />
+    <Compile Include="Search\Process\MonoMass\PeakPoint.cs" />
     <Compile Include="Search\Process\Normalize\GeneralNormalizeSpectrumProcessing.cs" />
     <Compile Include="Search\Process\PeakPicking\GeneralPeakPickingSpectrumProcessing.cs" />
     <Compile Include="Search\Process\PeakPicking\IPeakPickingDelegator.cs" />
@@ -165,6 +170,8 @@
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </COMReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Analyze\Analyzer\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

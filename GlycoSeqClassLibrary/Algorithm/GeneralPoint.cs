@@ -5,15 +5,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GlycoSeqClassLibrary.Search.Precursor
+namespace GlycoSeqClassLibrary.Algorithm
 {
     public class GeneralPoint : IPoint
     {
-        double mass;
+        protected double value;
 
-        public GeneralPoint(double mass)
+        public GeneralPoint(double value)
         {
-            this.mass = mass;
+            this.value = value;
         }
 
         public int CompareTo(IPoint other)
@@ -23,7 +23,7 @@ namespace GlycoSeqClassLibrary.Search.Precursor
 
         public double GetValue()
         {
-            return mass;
+            return value;
         }
     }
 }
