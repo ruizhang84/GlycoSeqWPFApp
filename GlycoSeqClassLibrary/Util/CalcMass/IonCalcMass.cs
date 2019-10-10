@@ -32,7 +32,7 @@ namespace GlycoSeqClassLibrary.Util.CalcMass
             switch (type)
             {
                 case IonType.yIon:
-                    mass += Oxygen + Hydrogen * 2;
+                    mass -= Hydrogen;
                 break;
             }
             return mass;
