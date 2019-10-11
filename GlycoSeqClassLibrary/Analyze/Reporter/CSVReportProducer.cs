@@ -14,9 +14,11 @@ namespace GlycoSeqClassLibrary.Analyze.Reporter
         protected StreamWriter writer;
         protected FileStream ostrm;
         protected string output;
+        protected double scoreCutoff;
 
         public CSVReportProducer()
         {
+            scoreCutoff = 0;
         }
 
         public void Exit()
@@ -25,7 +27,7 @@ namespace GlycoSeqClassLibrary.Analyze.Reporter
             ostrm.Close();
         }
 
-        public bool InitSucess()
+        public bool InitSucess(double cutoff)
         {
             try
             {
@@ -36,7 +38,10 @@ namespace GlycoSeqClassLibrary.Analyze.Reporter
                 writer.Write("glycan, ");
                 writer.Write("score, ");
                 writer.Write("mz, ");
-                writer.WriteLine("charge, ");
+                writer.Write("charge, ");
+                if (cutoff > 0)
+                    writer.Write("Score Cutoff:" + cutoff.ToString() + ", ");
+                writer.WriteLine();
                 return true;
             }
             catch (Exception e)
@@ -47,44 +52,50 @@ namespace GlycoSeqClassLibrary.Analyze.Reporter
             }
         }
 
-        void ReportLines(ISpectrum spectrum, List<IScore> scores)
+        protected void ReportLines(ISpectrum spectrum, List<IScore> scores, double cutoff)
         {
             HashSet<string> seen = new HashSet<string>();
             foreach (IScore score in scores)
             {
-                // get glycan
-                IGlycoPeptide glycoPeptide = score.GetGlycoPeptide();
-
-                // remove redudant
-                string structure = string.Join("_", glycoPeptide.GetGlycan().GetStructure());
-                string seq = glycoPeptide.GetPeptide().GetSequence();
-                if (!seen.Contains(structure + seq))
+                if (score.GetScore() > cutoff)
                 {
-                    seen.Add(structure + seq);
-                }
-                else
-                {
-                    continue;
-                }
+                    // get glycan
+                    IGlycoPeptide glycoPeptide = score.GetGlycoPeptide();
 
-                writer.Write(spectrum.GetScanNum().ToString() + ", ");
-                writer.Write(seq + ", ");
-                writer.Write(structure + ", ");
-                writer.Write(score.GetScore().ToString() + ", ");
-                writer.Write((spectrum as ISpectrumMSn).GetParentMZ().ToString() + ", ");
-                writer.WriteLine((spectrum as ISpectrumMSn).GetParentCharge().ToString());
+                    // remove redudant
+                    string structure = string.Join("_", glycoPeptide.GetGlycan().GetStructure());
+                    string seq = glycoPeptide.GetPeptide().GetSequence();
+                    if (!seen.Contains(structure + seq))
+                    {
+                        seen.Add(structure + seq);
+                    }
+                    else
+                    {
+                        continue;
+                    }
+
+                    writer.Write(spectrum.GetScanNum().ToString() + ", ");
+                    writer.Write(seq + ", ");
+                    writer.Write(structure + ", ");
+                    writer.Write(score.GetScore().ToString() + ", ");
+                    writer.Write((spectrum as ISpectrumMSn).GetParentMZ().ToString() + ", ");
+                    writer.Write((spectrum as ISpectrumMSn).GetParentCharge().ToString() +", ");
+                    if (cutoff > 0)
+                        writer.Write(", ");
+                    writer.WriteLine();
+                }
             }
         }
 
-        public void Report(IResults results, int start, int end)
+        public virtual void Report(IResults results, int start, int end)
         {
-            if (InitSucess())
+            if (InitSucess(scoreCutoff))
             {
                 for (int scanNum = start; scanNum <= end; scanNum++)
                 {
                     if (results.Contains(scanNum))
                     {
-                        ReportLines(results.GetSpectrum(scanNum), results.GetResult(scanNum));
+                        ReportLines(results.GetSpectrum(scanNum), results.GetResult(scanNum), scoreCutoff);
                     }
                 }
                 Exit();

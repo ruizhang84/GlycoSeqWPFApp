@@ -24,7 +24,7 @@ using GlycoSeqClassLibrary.Search.SearchEThcD;
 
 namespace ConsoleAppTest
 {
-    public class TestCase9 : TestCase
+    public class TestCase10 : TestCase
     {
         public void Run()
         {
@@ -32,10 +32,10 @@ namespace ConsoleAppTest
             watch.Start();
 
             var builder = new ContainerBuilder();
-            builder.RegisterModule(new NGlycanModule() { HexNAcBound = 12, HexBound =12, FucBound = 5, NeuAcBound = 4, NeuGcBound =0 });
+            builder.RegisterModule(new NGlycanModule() { HexNAcBound = 12, HexBound = 12, FucBound = 5, NeuAcBound = 4, NeuGcBound = 0 });
             builder.RegisterModule(new NGlycoPeptideModule());
 
-            List<string> enzymes = new List<string>() {"GluC", "Trypsin" };
+            List<string> enzymes = new List<string>() { "GluC", "Trypsin" };
             builder.RegisterModule(new DoubleDigestionPeptidesModule() { Enzymes = enzymes, MiniLength = 7, MissCleavage = 2 });
 
             builder.RegisterModule(new FastaProteinModule());
@@ -43,13 +43,13 @@ namespace ConsoleAppTest
 
             builder.RegisterModule(new MonoMassSpectrumGetterModule());
             builder.RegisterModule(new PrecursorMatcherModule() { Tolerance = 0.01 });
-            builder.RegisterModule(new SearchEThcDModule() { Tolerance = 20 });
+            builder.RegisterModule(new SearchEThcDModule() { Tolerance = 20, alpha = 0.5, beta = 0.5 });
 
-            builder.RegisterModule(new TopPeakPickingDelegatorModule() { MaxPeaks = 100});
+            builder.RegisterModule(new TopPeakPickingDelegatorModule() { MaxPeaks = 100 });
             builder.RegisterModule(new SpectrumProcessingModule());
             builder.RegisterModule(new ThermoRawSpectrumModule());
 
-            builder.Register(c => new GeneralSearchEThcDEngine(c.Resolve<IProteinCreator>(), c.Resolve<IPeptideCreator>(),
+            builder.Register(c => new FDRSearchEThcDEngine(c.Resolve<IProteinCreator>(), c.Resolve<IPeptideCreator>(),
                 c.Resolve<IGlycanCreator>(), c.Resolve<ISpectrumReader>(), c.Resolve<ISpectrumFactory>(), c.Resolve<ISpectrumProcessing>(),
                 c.Resolve<IMonoMassSpectrumGetter>(), c.Resolve<IPrecursorMatcher>(), c.Resolve<ISearchEThcD>(),
                 c.Resolve<IResults>(), c.Resolve<IReportProducer>())).As<ISearchEngine>();
@@ -66,7 +66,7 @@ namespace ConsoleAppTest
                     @"C:\Users\iruiz\Desktop\app\test.csv");
 
                 for (int scan = searchEThcDEngine.GetFirstScan(); scan <= searchEThcDEngine.GetLastScan(); scan++)
-                {                   
+                {
                     searchEThcDEngine.Search(scan);
                 }
                 searchEThcDEngine.Analyze(searchEThcDEngine.GetFirstScan(), searchEThcDEngine.GetLastScan());
@@ -75,7 +75,6 @@ namespace ConsoleAppTest
 
             Console.WriteLine($"Execution Time: {watch.ElapsedMilliseconds} ms");
             Console.Read();
-
         }
     }
 }

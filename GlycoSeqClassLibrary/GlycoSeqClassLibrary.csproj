@@ -79,10 +79,14 @@
     <Compile Include="Analyze\IResults.cs" />
     <Compile Include="Analyze\IScore.cs" />
     <Compile Include="Analyze\IScoreFactory.cs" />
+    <Compile Include="Analyze\IScoreProxy.cs" />
     <Compile Include="Analyze\Reporter\CSVReportProducer.cs" />
+    <Compile Include="Analyze\Reporter\FDRCSVReportProducer.cs" />
     <Compile Include="Analyze\Result\GeneralResults.cs" />
     <Compile Include="Analyze\Score\GeneralScore.cs" />
     <Compile Include="Analyze\Score\GeneralScoreFactory.cs" />
+    <Compile Include="Analyze\Score\FDRScoreProxy.cs" />
+    <Compile Include="Analyze\Score\IFDRScoreProxy.cs" />
     <Compile Include="Builder\Chemistry\Glycan\GeneralTableNGlycanCreator.cs" />
     <Compile Include="Builder\Chemistry\Glycan\IGlycanCreator.cs" />
     <Compile Include="Builder\Chemistry\Glycan\ITableNGlycanProxy.cs" />
@@ -122,6 +126,7 @@
     <Compile Include="Engine\EngineSetup\Peptide\DoubleDigestionPeptidesModule.cs" />
     <Compile Include="Engine\EngineSetup\Protein\FastaProteinModule.cs" />
     <Compile Include="Engine\EngineSetup\Report\CSVReportModule.cs" />
+    <Compile Include="Engine\EngineSetup\Report\FDRCSVReportModule.cs" />
     <Compile Include="Engine\EngineSetup\Search\MonoMassSpectrumGetterModule.cs" />
     <Compile Include="Engine\EngineSetup\Search\PrecursorMatcherModule.cs" />
     <Compile Include="Engine\EngineSetup\Search\SearchEThcDModule.cs" />
@@ -129,7 +134,7 @@
     <Compile Include="Engine\EngineSetup\Spectrum\SpectrumProcessingModule.cs" />
     <Compile Include="Engine\EngineSetup\Spectrum\ThermoRawSpectrumModule.cs" />
     <Compile Include="Engine\ISearchEngine.cs" />
-    <Compile Include="Engine\SearchEThcD\DecoySearchEthcDEngine.cs" />
+    <Compile Include="Engine\SearchEThcD\FDRSearchEThcDEngine.cs" />
     <Compile Include="Engine\SearchEThcD\GeneralSearchEThcDEngine.cs" />
     <Compile Include="Model\Chemistry\Glycan\IGlycan.cs" />
     <Compile Include="Model\Chemistry\Glycan\ITableNGlycan.cs" />
@@ -189,9 +194,7 @@
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </COMReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Analyze\Analyzer\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
