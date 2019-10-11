@@ -19,9 +19,8 @@ namespace GlycoSeqClassLibrary.Search.Precursor
         ISearch matcher;
         IGlycoPeptideCreator creator;
 
-        public GeneralPrecursorMatcher(List<IPeptide> peptides, ISearch matcher, IGlycoPeptideCreator creator)
+        public GeneralPrecursorMatcher(ISearch matcher, IGlycoPeptideCreator creator)
         {
-            this.peptides = peptides;
             this.matcher = matcher;
             this.creator = creator;
         }
@@ -50,6 +49,16 @@ namespace GlycoSeqClassLibrary.Search.Precursor
         public List<IGlycoPeptide> Match(ISpectrum spectrum)
         {
             return Match(spectrum, (spectrum as ISpectrumMSn).GetParentMZ());
+        }
+
+        public void SetGlycans(List<IGlycan> glycans)
+        {
+            List<IPoint> points = new List<IPoint>();
+            foreach (IGlycan glycan in glycans)
+            {
+                points.Add(new GlycanPoint(glycan));
+            }
+            matcher.setData(points);
         }
 
         public void SetPeptides(List<IPeptide> peptides)

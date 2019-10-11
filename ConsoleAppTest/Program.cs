@@ -16,7 +16,7 @@ namespace ConsoleAppTest
     {
         static void Main(string[] args)
         {
-            TestCase t = new TestCase7();
+            TestCase t = new TestCase9();
             t.Run();
 
         }       

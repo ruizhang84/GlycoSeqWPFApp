@@ -14,21 +14,10 @@ namespace GlycoSeqClassLibrary.Algorithm
         protected double Tolerance { get; set;}
         protected bool searchable;
         
-        public BucketSearch(List<IPoint> data, IComparer<IPoint> comparer, double tol = 0.1) : base(data, comparer)
+        public BucketSearch(IComparer<IPoint> comparer, double tol = 0.1) : base(comparer)
         {
             Tolerance = tol;
-            if (data.Count > 0)
-            {
-                double lowerBound = data.Min(x => x.GetValue());
-                double upperBound = data.Max(x => x.GetValue());
-                Init(lowerBound, upperBound);
-                AddRange(data);
-                searchable = true;
-            }
-            else
-            {
-                searchable = false;
-            }
+            searchable = false;
         }
 
         public override void setData(List<IPoint> data)

@@ -8,10 +8,8 @@ namespace GlycoSeqClassLibrary.Algorithm
 {
     public class BinarySearch : AbstractSearch, ISearch
     {
-        public BinarySearch(List<IPoint> data, IComparer<IPoint> comparer) : base(data, comparer)
+        public BinarySearch(IComparer<IPoint> comparer) : base(comparer)
         {
-            if (data.Count > 1)
-                data.Sort();
         }
 
         public override List<IPoint> Search(IPoint pt)

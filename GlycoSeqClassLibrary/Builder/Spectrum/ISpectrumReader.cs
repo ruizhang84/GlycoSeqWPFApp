@@ -9,6 +9,7 @@ namespace GlycoSeqClassLibrary.Builder.Spectrum
 {
     public interface ISpectrumReader
     {
+        void Init(string fileName);
         int GetFirstScan();
         int GetLastScan();
         int GetMSnOrder(int scanNum);

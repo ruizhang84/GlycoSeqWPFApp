@@ -13,7 +13,8 @@ namespace ConsoleAppTest
     {
         public void Run()
         {
-            ISpectrumReader reader = new ThermoRawSpectrumReader(@"C:\Users\iruiz\Desktop\app\ZC_20171218_H95_R1.raw");
+            ISpectrumReader reader = new ThermoRawSpectrumReader();
+            reader.Init(@"C:\Users\iruiz\Desktop\app\ZC_20171218_H95_R1.raw");
             ISpectrumFactory creator = new GeneralSpectrumFactory(reader);
 
             Console.WriteLine(creator.GetFirstScan());

@@ -14,14 +14,10 @@ namespace GlycoSeqClassLibrary.Builder.Spectrum.ThermoRaw
         protected IXRawfile5 rawConnect;
         protected RawReader rawReader;
 
-        public ThermoRawSpectrumReader(string fileName)
+        public ThermoRawSpectrumReader()
         {
             rawConnect = new MSFileReader_XRawfile() as IXRawfile5;
             rawReader = new RawReader();
-
-            rawConnect.Open(fileName);
-            rawConnect.SetCurrentController(0, 1);
-            rawReader.Init(fileName);
         }
 
         ~ThermoRawSpectrumReader()
@@ -94,5 +90,11 @@ namespace GlycoSeqClassLibrary.Builder.Spectrum.ThermoRaw
             return rawReader.GetPrecursorInfo(scanNum);
         }
 
+        public void Init(string fileName)
+        {
+            rawConnect.Open(fileName);
+            rawConnect.SetCurrentController(0, 1);
+            rawReader.Init(fileName);
+        }
     }
 }

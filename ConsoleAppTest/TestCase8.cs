@@ -1,4 +1,8 @@
 ﻿using GlycoSeqClassLibrary.Algorithm;
+using GlycoSeqClassLibrary.Analyze;
+using GlycoSeqClassLibrary.Analyze.Reporter;
+using GlycoSeqClassLibrary.Analyze.Result;
+using GlycoSeqClassLibrary.Analyze.Score;
 using GlycoSeqClassLibrary.Builder.Chemistry.Glycan;
 using GlycoSeqClassLibrary.Builder.Chemistry.Glycan.Mass;
 using GlycoSeqClassLibrary.Builder.Chemistry.Glycopeptide;
@@ -10,6 +14,8 @@ using GlycoSeqClassLibrary.Builder.Chemistry.Protein;
 using GlycoSeqClassLibrary.Builder.Chemistry.Protein.Fasta;
 using GlycoSeqClassLibrary.Builder.Spectrum;
 using GlycoSeqClassLibrary.Builder.Spectrum.ThermoRaw;
+using GlycoSeqClassLibrary.Engine;
+using GlycoSeqClassLibrary.Engine.SearchEThcD;
 using GlycoSeqClassLibrary.Model.Chemistry.Glycan;
 using GlycoSeqClassLibrary.Model.Chemistry.Glycan.TableNGlycan;
 using GlycoSeqClassLibrary.Model.Chemistry.GlycoPeptide;
@@ -17,6 +23,12 @@ using GlycoSeqClassLibrary.Model.Chemistry.Peptide;
 using GlycoSeqClassLibrary.Model.Chemistry.Protein;
 using GlycoSeqClassLibrary.Model.Spectrum;
 using GlycoSeqClassLibrary.Search.Precursor;
+using GlycoSeqClassLibrary.Search.Process;
+using GlycoSeqClassLibrary.Search.Process.MonoMass;
+using GlycoSeqClassLibrary.Search.Process.Normalize;
+using GlycoSeqClassLibrary.Search.Process.PeakPicking;
+using GlycoSeqClassLibrary.Search.Process.PeakPicking.PeakPickingDelegator;
+using GlycoSeqClassLibrary.Search.SearchEThcD;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,17 +37,18 @@ using System.Threading.Tasks;
 
 namespace ConsoleAppTest
 {
-    public class TestCase5 : TestCase
+    public class TestCase8 : TestCase
     {
         public void Run()
         {
 
             var watch = new System.Diagnostics.Stopwatch();
             watch.Start();
+
             // protein
             IProteinDataBuilder proteinBuilder = new GeneralFastaDataBuilder();
             IProteinCreator proteinCreator = new GeneralProteinCreator(proteinBuilder);
-            List<IProtein> proteins = proteinCreator.Create(@"C:\Users\iruiz\Desktop\app\HP.fasta");
+            
             // peptides
             List<IPeptideSequencesGenerator> generatorList = new List<IPeptideSequencesGenerator>();
             IPeptideSequencesGeneratorParameter parameter = new GeneralPeptideGeneratorParameter();
@@ -48,59 +61,63 @@ namespace ConsoleAppTest
             generatorList.Add(generatorTrypsin);
             IPeptideSequencesGenerator peptideSequencesGenerator = new DoubleDigestionPeptideSequencesGeneratorProxy(generatorList);
             IPeptideCreator peptideCreator = new GeneralPeptideCreator(peptideSequencesGenerator);
-            List<IPeptide> peptides = new List<IPeptide>();
-            HashSet<string> seen = new HashSet<string>();
-            foreach(IProtein protein in proteins)
-            {
-                foreach(IPeptide peptide in peptideCreator.Create(protein))
-                {
-                    if (!seen.Contains(peptide.GetSequence()))
-                    {
-                        seen.Add(peptide.GetSequence());
-                        peptides.Add(peptide);
-                    }
-                } 
-            }
+
+            
             // glycans
             ITableNGlycanProxyGenerator tableNGlycanProxyGenerator = new GeneralTableNGlycanMassProxyGenerator(12, 12, 5, 4, 0);
             int[] structTable = new int[24];
             structTable[0] = 1;
             ITableNGlycanProxy root = new GeneralTableNGlycanMassProxy(new ComplexNGlycan(structTable));
             IGlycanCreator glycanCreator = new GeneralTableNGlycanCreator(tableNGlycanProxyGenerator, root);
-            List<IGlycan> glycans = glycanCreator.Create();
-
-
-
+            
             // precursor
-            List<IPoint> points = new List<IPoint>();
-            foreach (IGlycan glycan in glycans)
-            {
-                points.Add(new GlycanPoint(glycan));
-            }
+            
             IComparer<IPoint> comparer = new ToleranceComparer(0.01);
             ISearch matcher = new BucketSearch(comparer, 0.01);
-            matcher.setData(points);
             IGlycoPeptideProxyGenerator glycoPeptideProxyGenerator = new GeneralTableNGlycoPeptideMassProxyGenerator();
             IGlycoPeptideCreator glycoPeptideCreator = new GeneralNGlycoPeptideSingleSiteCreator(glycoPeptideProxyGenerator);
             IPrecursorMatcher precursorMatcher = new GeneralPrecursorMatcher(matcher, glycoPeptideCreator);
-            precursorMatcher.SetGlycans(glycans);
-            precursorMatcher.SetPeptides(peptides);
 
             // spectrum
             ISpectrumReader spectrumReader = new ThermoRawSpectrumReader();
-            spectrumReader.Init(@"C:\Users\iruiz\Desktop\app\ZC_20171218_H95_R1.raw");
             ISpectrumFactory spectrumFactory = new GeneralSpectrumFactory(spectrumReader);
 
-            ISpectrum spectrum = spectrumFactory.GetSpectrum(7039);
-            List<IGlycoPeptide> glycoPeptides = precursorMatcher.Match(spectrum);
-            watch.Stop();
 
-            Console.WriteLine(glycoPeptides.Count);
-            foreach(IGlycoPeptide glycoPeptide in glycoPeptides)
+            IComparer<IPoint> comparer2 = new PPMComparer(20);
+            ISearch matcherPeaks = new BucketSearch(comparer2, 0.01);
+            IScoreFactory scoreFactory = new GeneralScoreFactory(1.0, 0.0);
+            IGlycoPeptidePointsCreator glycoPeptidePointsCreator = new GeneralGlycoPeptideMassProxyPointsCreator();
+            ISearchEThcD searchEThcDRunner = new GeneralSearchEThcD(matcherPeaks, scoreFactory, glycoPeptidePointsCreator);
+
+            IPeakPickingDelegator delegator = new TopIntensityPeakPickingDelegator(100);
+            ISpectrumProcessing peakPicking = new GeneralPeakPickingSpectrumProcessing(delegator);
+            ISpectrumProcessing normalizer = new GeneralNormalizeSpectrumProcessing(1.0);
+            ISpectrumProcessingProxy spectrumProcessing = new SpectrumPRocessingProxy();
+            spectrumProcessing.Add(peakPicking);
+            spectrumProcessing.Add(normalizer);
+            IResults results = new GeneralResults();
+
+            IComparer<IPoint> comparer3 = new PPMComparer(5);
+            ISearch matcherSpectrum = new BinarySearch(comparer3);
+            IMonoMassSpectrumGetter monoMassSpectrumGetter = new GeneralMonoMassSpectrumGetter(matcherSpectrum);
+
+            IReportProducer reportProducer = new CSVReportProducer();
+
+            ISearchEngine searchEThcDEngine = new GeneralSearchEThcDEngine(proteinCreator, peptideCreator, glycanCreator, 
+                spectrumReader, spectrumFactory, spectrumProcessing, monoMassSpectrumGetter, precursorMatcher, searchEThcDRunner,
+                results, reportProducer);
+
+            searchEThcDEngine.Init(
+                @"C:\Users\iruiz\Desktop\app\ZC_20171218_H95_R1.raw",
+                @"C:\Users\iruiz\Desktop\app\HP.fasta",
+                @"C:\Users\iruiz\Desktop\app\test.csv");
+
+            for(int scan = searchEThcDEngine.GetFirstScan(); scan <= searchEThcDEngine.GetLastScan(); scan++)
             {
-                Console.WriteLine(glycoPeptide.GetType());
+                searchEThcDEngine.Search(scan);
             }
-            
+
+            searchEThcDEngine.Analyze(searchEThcDEngine.GetFirstScan(), searchEThcDEngine.GetLastScan());
             Console.WriteLine($"Execution Time: {watch.ElapsedMilliseconds} ms");
             Console.Read();
         }

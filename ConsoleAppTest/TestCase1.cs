@@ -43,7 +43,8 @@ namespace ConsoleAppTest
             IComparer<IPoint> comparer = new ToleranceComparer(1.1);
 
             Console.WriteLine(comparer.Compare(new MassPoint(122), new MassPoint(123)));
-            BinarySearch bins = new BinarySearch(points, comparer);
+            BinarySearch bins = new BinarySearch(comparer);
+            bins.setData(points);
             List<IPoint> found = new List<IPoint>();
             for (int j = 122; j < 123; j += 10)
                 found.AddRange(bins.Search(new MassPoint(j)));
@@ -59,7 +60,8 @@ namespace ConsoleAppTest
             watch.Start();
             //BinarySearch bins = new BinarySearch(points, 1.1);
             //List<IPoint> result = bins.Search(new MassPoint(3));
-            BucketSearch bucket = new BucketSearch(points, comparer, 1.1);
+            BucketSearch bucket = new BucketSearch(comparer, 1.1);
+            bucket.setData(points);
 
             for (int j = 122; j < 123; j += 10)
                 found.AddRange(bucket.Search(new MassPoint(j)));

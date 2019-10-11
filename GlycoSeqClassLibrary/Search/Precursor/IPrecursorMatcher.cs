@@ -1,4 +1,5 @@
-﻿using GlycoSeqClassLibrary.Model.Chemistry.GlycoPeptide;
+﻿using GlycoSeqClassLibrary.Model.Chemistry.Glycan;
+using GlycoSeqClassLibrary.Model.Chemistry.GlycoPeptide;
 using GlycoSeqClassLibrary.Model.Chemistry.Peptide;
 using GlycoSeqClassLibrary.Model.Spectrum;
 using System;
@@ -14,5 +15,6 @@ namespace GlycoSeqClassLibrary.Search.Precursor
         List<IGlycoPeptide> Match(ISpectrum spectrum, double monoMass);
         List<IGlycoPeptide> Match(ISpectrum spectrum);
         void SetPeptides(List<IPeptide> peptides);
+        void SetGlycans(List<IGlycan> glycans);
     }
 }

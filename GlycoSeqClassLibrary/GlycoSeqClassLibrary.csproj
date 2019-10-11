@@ -49,6 +49,9 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Autofac, Version=4.9.4.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\packages\Autofac.4.9.4\lib\net45\Autofac.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -114,6 +117,20 @@
     <Compile Include="Builder\Spectrum\ISpectrumFactory.cs" />
     <Compile Include="Builder\Spectrum\ISpectrumReader.cs" />
     <Compile Include="Builder\Spectrum\ThermoRaw\ThermoRawSpectrumReader.cs" />
+    <Compile Include="Engine\EngineSetup\Glycan\NGlycanModule.cs" />
+    <Compile Include="Engine\EngineSetup\GlycoPeptide\NGlycoPeptideModule.cs" />
+    <Compile Include="Engine\EngineSetup\Peptide\DoubleDigestionPeptidesModule.cs" />
+    <Compile Include="Engine\EngineSetup\Protein\FastaProteinModule.cs" />
+    <Compile Include="Engine\EngineSetup\Report\CSVReportModule.cs" />
+    <Compile Include="Engine\EngineSetup\Search\MonoMassSpectrumGetterModule.cs" />
+    <Compile Include="Engine\EngineSetup\Search\PrecursorMatcherModule.cs" />
+    <Compile Include="Engine\EngineSetup\Search\SearchEThcDModule.cs" />
+    <Compile Include="Engine\EngineSetup\Spectrum\TopPeakPickingDelegatorModule.cs" />
+    <Compile Include="Engine\EngineSetup\Spectrum\SpectrumProcessingModule.cs" />
+    <Compile Include="Engine\EngineSetup\Spectrum\ThermoRawSpectrumModule.cs" />
+    <Compile Include="Engine\ISearchEngine.cs" />
+    <Compile Include="Engine\SearchEThcD\DecoySearchEthcDEngine.cs" />
+    <Compile Include="Engine\SearchEThcD\GeneralSearchEThcDEngine.cs" />
     <Compile Include="Model\Chemistry\Glycan\IGlycan.cs" />
     <Compile Include="Model\Chemistry\Glycan\ITableNGlycan.cs" />
     <Compile Include="Model\Chemistry\Glycan\TableNGlycan\AbstractNGlycan.cs" />
@@ -148,6 +165,8 @@
     <Compile Include="Search\Process\PeakPicking\GeneralPeakPickingSpectrumProcessing.cs" />
     <Compile Include="Search\Process\PeakPicking\IPeakPickingDelegator.cs" />
     <Compile Include="Search\Process\PeakPicking\PeakPickingDelegator\TopIntensityPeakPickingDelegator.cs" />
+    <Compile Include="Search\Process\ISpectrumProcessingProxy.cs" />
+    <Compile Include="Search\Process\SpectrumPRocessingProxy.cs" />
     <Compile Include="Search\SearchEThcD\GeneralGlycoPeptideMassProxyPointsCreator.cs" />
     <Compile Include="Search\SearchEThcD\GeneralSearchEThcD.cs" />
     <Compile Include="Search\SearchEThcD\IGlycoPeptidePointsCreator.cs" />
@@ -172,6 +191,9 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Analyze\Analyzer\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

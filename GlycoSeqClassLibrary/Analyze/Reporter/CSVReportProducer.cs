@@ -15,9 +15,8 @@ namespace GlycoSeqClassLibrary.Analyze.Reporter
         protected FileStream ostrm;
         protected string output;
 
-        public CSVReportProducer(string output)
+        public CSVReportProducer()
         {
-            this.output = output;
         }
 
         public void Exit()

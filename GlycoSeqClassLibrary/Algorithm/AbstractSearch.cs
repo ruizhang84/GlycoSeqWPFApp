@@ -11,9 +11,8 @@ namespace GlycoSeqClassLibrary.Algorithm
         protected List<IPoint> data;
         protected IComparer<IPoint> comparer;
 
-        public AbstractSearch(List<IPoint> data, IComparer<IPoint> comparer)
+        public AbstractSearch(IComparer<IPoint> comparer)
         {
-            this.data = data;
             this.comparer = comparer;
         }
 
