@@ -18,7 +18,7 @@ namespace GlycoSeqClassLibrary.Engine.EngineSetup.Search
         {
             builder.Register(c => 
             {
-                IComparer<IPoint> comparer = new ToleranceComparer(Tolerance);
+                IComparer<IPoint> comparer = new PPMComparer(Tolerance);
                 ISearch matcher = new BinarySearch(comparer);
 
                 return new GeneralPrecursorMatcher(matcher, c.Resolve<IGlycoPeptideCreator>());

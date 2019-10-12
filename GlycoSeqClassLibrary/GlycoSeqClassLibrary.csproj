@@ -87,6 +87,8 @@
     <Compile Include="Analyze\Score\GeneralScoreFactory.cs" />
     <Compile Include="Analyze\Score\FDRScoreProxy.cs" />
     <Compile Include="Analyze\Score\IFDRScoreProxy.cs" />
+    <Compile Include="Analyze\Score\WeightedScore.cs" />
+    <Compile Include="Analyze\Score\WeightedScoreFactory.cs" />
     <Compile Include="Builder\Chemistry\Glycan\GeneralTableNGlycanCreator.cs" />
     <Compile Include="Builder\Chemistry\Glycan\IGlycanCreator.cs" />
     <Compile Include="Builder\Chemistry\Glycan\ITableNGlycanProxy.cs" />

@@ -9,21 +9,30 @@ namespace GlycoSeqClassLibrary.Builder.Chemistry.Glycopeptide.Mass
 {
     public class GeneralGlycoPeptideMassProxy : GlycoPeptideProxyTemplate, IGlycoPeptideMassProxy
     {
-        protected HashSet<double> massTable;
+        protected Dictionary<MassType, HashSet<double>> massTable;
 
         public GeneralGlycoPeptideMassProxy(IGlycoPeptide glycoPeptide) : base(glycoPeptide)
         {
-            massTable = new HashSet<double>();
+            massTable = new Dictionary<MassType, HashSet<double>>();
         }
 
-        public void AddMass(double mass)
+        public void AddMass(double mass, MassType type)
         {
-            massTable.Add(mass);
+            if (!massTable.ContainsKey(type))
+            {
+                massTable[type] = new HashSet<double>();
+            }
+            massTable[type].Add(mass);
         }
 
-        public void AddRangeMass(List<double> massList)
+        public void AddRangeMass(List<double> massList, MassType type)
         {
-            massTable.UnionWith(massList);
+            if (!massTable.ContainsKey(type))
+            {
+                massTable[type] = new HashSet<double>();
+            }
+
+            massTable[type].UnionWith(massList);
         }
 
         public void Clear()
@@ -31,9 +40,9 @@ namespace GlycoSeqClassLibrary.Builder.Chemistry.Glycopeptide.Mass
            massTable.Clear();
         }
 
-        public List<double> GetMass()
+        public List<double> GetMass(MassType type)
         {
-            return massTable.ToList();
+            return massTable[type].ToList();
         }
     }
 }

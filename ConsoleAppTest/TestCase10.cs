@@ -42,11 +42,11 @@ namespace ConsoleAppTest
             builder.RegisterModule(new FDRCSVReportModule() { FDR = 0.01 });
 
             builder.RegisterModule(new MonoMassSpectrumGetterModule());
-            builder.RegisterModule(new PrecursorMatcherModule() { Tolerance = 0.01 });
-            builder.RegisterModule(new SearchEThcDModule() { Tolerance = 20, alpha = 0.5, beta = 0.5 });
+            builder.RegisterModule(new PrecursorMatcherModule() { Tolerance = 20 });
+            builder.RegisterModule(new SearchEThcDModule() { Tolerance = 0.01, alpha = 1.0, beta = 0.0, glycanWeight = 1.0, peptideWeight = 0.2 });
 
             builder.RegisterModule(new TopPeakPickingDelegatorModule() { MaxPeaks = 100 });
-            builder.RegisterModule(new SpectrumProcessingModule());
+            builder.RegisterModule(new SpectrumProcessingModule() { ScaleFactor = 1000.0 });
             builder.RegisterModule(new ThermoRawSpectrumModule());
 
             builder.Register(c => new FDRSearchEThcDEngine(c.Resolve<IProteinCreator>(), c.Resolve<IPeptideCreator>(),

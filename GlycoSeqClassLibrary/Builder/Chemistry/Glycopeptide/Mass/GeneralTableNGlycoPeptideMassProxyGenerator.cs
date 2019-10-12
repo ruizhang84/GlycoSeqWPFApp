@@ -23,10 +23,10 @@ namespace GlycoSeqClassLibrary.Builder.Chemistry.Glycopeptide.Mass
                 {
                     foreach(double peptideMass in PTMPeptideCalcMass.Compute(peptide.GetSequence(), modifySite))
                     {
-                        glycoPeptideMassProxy.AddMass(glycanMass + peptideMass);
+                        glycoPeptideMassProxy.AddMass(glycanMass + peptideMass, MassType.Glycan);
                     }
                 }
-                glycoPeptideMassProxy.AddRangeMass(PTMPeptideCalcMass.ComputeNonPTM(peptide.GetSequence(), modifySite));
+                glycoPeptideMassProxy.AddRangeMass(PTMPeptideCalcMass.ComputeNonPTM(peptide.GetSequence(), modifySite), MassType.Peptide);
 
                 return glycoPeptideMassProxy;
 

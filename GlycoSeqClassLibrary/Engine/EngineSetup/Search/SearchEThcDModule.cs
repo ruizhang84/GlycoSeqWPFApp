@@ -16,14 +16,16 @@ namespace GlycoSeqClassLibrary.Engine.EngineSetup.Search
         public double Tolerance { get; set; }
         public double alpha { get; set; } = 1.0;
         public double beta { get; set; } = 0.0;
+        public double glycanWeight { get; set; } = 1.0;
+        public double peptideWeight { get; set; } = 0.0;
 
         protected override void Load(ContainerBuilder builder)
         {
             builder.Register(c => 
             {
-                IComparer<IPoint> comparer = new PPMComparer(Tolerance);
-                ISearch matcherPeaks = new BinarySearch(comparer);
-                IScoreFactory scoreFactory = new GeneralScoreFactory(alpha, beta);
+                IComparer<IPoint> comparer = new ToleranceComparer(Tolerance);
+                ISearch matcherPeaks = new BucketSearch(comparer, Tolerance);
+                IScoreFactory scoreFactory = new WeightedScoreFactory(alpha, beta, glycanWeight, peptideWeight);
                 IGlycoPeptidePointsCreator glycoPeptidePointsCreator = new GeneralGlycoPeptideMassProxyPointsCreator();
 
                 return new GeneralSearchEThcD(matcherPeaks, scoreFactory, glycoPeptidePointsCreator);

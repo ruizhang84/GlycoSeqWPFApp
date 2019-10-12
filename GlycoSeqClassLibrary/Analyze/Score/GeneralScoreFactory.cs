@@ -18,7 +18,7 @@ namespace GlycoSeqClassLibrary.Analyze.Score
             this.beta = beta;
         }
 
-        public IScore CreateScore(IGlycoPeptide glycoPeptide)
+        public IScore CreateScore(IGlycoPeptide glycoPeptide, object parameter)
         {
             return new GeneralScore(glycoPeptide, alpha, beta);
         }

@@ -39,5 +39,10 @@ namespace GlycoSeqClassLibrary.Analyze.Score
         {
             return score.GetScore();
         }
+
+        public void AddScore(IScore other)
+        {
+            score.AddScore(other);
+        }
     }
 }

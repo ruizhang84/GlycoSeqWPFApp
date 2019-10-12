@@ -12,10 +12,10 @@ namespace GlycoSeqClassLibrary.Search.SearchEThcD
 {
     public class GeneralGlycoPeptideMassProxyPointsCreator : IGlycoPeptidePointsCreator
     {
-        public List<IPoint> Create(IGlycoPeptide glycoPeptide)
+        public List<IPoint> Create(IGlycoPeptide glycoPeptide, MassType type)
         {
             List<IPoint> points = new List<IPoint>();
-            foreach(double mass in (glycoPeptide as IGlycoPeptideMassProxy).GetMass())
+            foreach(double mass in (glycoPeptide as IGlycoPeptideMassProxy).GetMass(type))
             {
                 points.Add(new GeneralPoint(mass));
             }

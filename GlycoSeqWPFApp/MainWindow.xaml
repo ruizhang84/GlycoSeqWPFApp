@@ -5,8 +5,63 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:GlycoSeqWPFApp"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="GlycoSeq" Height="450" Width="750">
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <!-- read File Name of MSMS data-->
+        <Border HorizontalAlignment="Stretch" VerticalAlignment="Stretch" BorderBrush="Black" Grid.Row="0">
+            <StackPanel Orientation="Horizontal">
+                <Label Content="MS/MS File" HorizontalAlignment="Left" VerticalAlignment="Top"  Width="76"/>
+                <TextBox x:Name="displayFileName" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Center" Width="600"/>
+                <Button x:Name="MSMSFileName" Content="..." HorizontalAlignment="Left" VerticalAlignment="Center" Width="30" Click="MSMSFileName_Click" RenderTransformOrigin="5.243,2.41"/>
+            </StackPanel>
+        </Border>
+        <Border HorizontalAlignment="Stretch" VerticalAlignment="Stretch" BorderBrush="Black" Grid.Row="1">
+            <StackPanel Orientation="Horizontal">
+                <Label Content="Fasta File" HorizontalAlignment="Left" VerticalAlignment="Top" Width="76"/>
+                <TextBox x:Name="displayFasta" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Center" Width="600"/>
+                <Button x:Name="FastaFileName" Content="..." HorizontalAlignment="Left" VerticalAlignment="Center" Width="30" Click="FastaFileName_Click" Grid.RowSpan="2"/>
+            </StackPanel>
+        </Border>
+        <Border HorizontalAlignment="Stretch" VerticalAlignment="Stretch" BorderBrush="Black" Grid.Row="2">
+            <StackPanel Orientation="Horizontal">
+                <Label Content="Output" HorizontalAlignment="Left" VerticalAlignment="Top" Width="76"/>
+                <TextBox x:Name="displayOutput" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Center" Width="600"/>
+                <Button x:Name="outputFileName" Content="..." HorizontalAlignment="Left" VerticalAlignment="Center" Width="30" Click="OutputFileName_Click" Grid.RowSpan="2"/>
+            </StackPanel>
+        </Border>
+        <Border HorizontalAlignment="Stretch" VerticalAlignment="Stretch" BorderBrush="Black" Grid.Row="3">
+            <StackPanel  Orientation="Vertical" Margin="0,0,0,10">
+                <Label Content="Searching" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                <RadioButton x:Name="EThcD"  Content="MS/MS by EThcD" Margin="10,5,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Checked="EThcD_Checked" IsChecked="True"/>
+            </StackPanel>
+        </Border>
+        <Border HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="4">
+            <Grid>
+                <Button x:Name="Search"  Content="Search" HorizontalAlignment="Right" VerticalAlignment="Top" Width="75" Click="Search_Click" Margin="0,220,80,0" />
+                <Button x:Name="Configure"  Content="Configure" HorizontalAlignment="Right" VerticalAlignment="Top" Width="75" Click="Configure_Click" Margin="0,220,160,0" />
+                <TextBlock x:Name="GeneralDescriptor" HorizontalAlignment="Left" Margin="40,30,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="200" Width="500" Visibility="Visible">
+                    <Italic>Description of the Method:</Italic><LineBreak/><LineBreak/>
+                    
+                    This method reads in <Bold>MS/MS Raw File (*.Raw)</Bold>, along with <Bold>protein sequence (*.Fasta)</Bold>
+                    The results were reported as glycopeptide with the scan and the score in csv.<LineBreak/>
+                    <LineBreak/>
+                    
+                    Click <Bold>Configure</Bold> to setup program. Defualt: digestion by Trypsin, MS and MS/MS's tolerance as 20 ppm,
+                    and picking up top 100 peaks from spectrum. <LineBreak/>
+                    <LineBreak/>
+                    
+                    Click <Bold>Search</Bold> to Run. Select fragmentation model ETDhcD above.
+			        <!--<Span Foreground="Blue"><LineBreak/>-->
+
+                </TextBlock>
+            </Grid>
+        </Border>
     </Grid>
 </Window>
