@@ -141,4 +141,7 @@
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>xcopy /y /d "$(SolutionDir)GlycoSeqClassLibrary\lib\XRawfile2_x64.dll" "$(OutDir)"</PostBuildEvent>
+  </PropertyGroup>
 </Project>
