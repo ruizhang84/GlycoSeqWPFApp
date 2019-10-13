@@ -60,12 +60,6 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
-    <Reference Include="ThermoRawClassLibrary">
-      <HintPath>lib\ThermoRawClassLibrary.dll</HintPath>
-    </Reference>
-    <Reference Include="ThermoRawDll">
-      <HintPath>lib\ThermoRawDll.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Algorithm\AbstractSearch.cs" />
@@ -186,6 +180,9 @@
     <Compile Include="Util\Model\FindPTMPosition.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
     <COMReference Include="MSFileReaderLib">
       <Guid>{F0C5F3E3-4F2A-443E-A74D-0AABE3237494}</Guid>
       <VersionMajor>1</VersionMajor>
@@ -196,9 +193,15 @@
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </COMReference>
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
-    <None Include="packages.config" />
+    <ProjectReference Include="..\ThermoRawClassLibrary\ThermoRawClassLibrary.csproj">
+      <Project>{eda4b828-4879-49df-8ace-1126ba42f27a}</Project>
+      <Name>ThermoRawClassLibrary</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ThermoRawDll\ThermoRawDll.vcxproj">
+      <Project>{a3d135d7-eae6-44d4-a1a4-5fe6ae4cb496}</Project>
+      <Name>ThermoRawDll</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
