@@ -16,10 +16,12 @@ namespace ThermolRawClassLibrary
         {
             raws = new ThermoDLLClass();
         }
+
         public void Init(string path)
         {
             this.path = path;
         }
+
         public double[] GetPrecursorInfo(int scanNum)
         {
             PrecursorInfo infos = raws.GetPrecursorInfo(scanNum, path);

@@ -139,6 +139,14 @@
       <Project>{7e25510e-f354-4c20-98d1-0a47d57dbfbc}</Project>
       <Name>GlycoSeqClassLibrary</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ThermoRawClassLibrary\ThermoRawClassLibrary.csproj">
+      <Project>{eda4b828-4879-49df-8ace-1126ba42f27a}</Project>
+      <Name>ThermoRawClassLibrary</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ThermoRawDll\ThermoRawDll.vcxproj">
+      <Project>{a3d135d7-eae6-44d4-a1a4-5fe6ae4cb496}</Project>
+      <Name>ThermoRawDll</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

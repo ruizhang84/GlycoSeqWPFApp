@@ -94,7 +94,12 @@ namespace GlycoSeqWPFApp
             builder.RegisterModule(new FastaProteinModule());
             builder.RegisterModule(new FDRCSVReportModule() { FDR = SearchParameters.Access.FDRValue });
 
-            builder.RegisterModule(new MonoMassSpectrumGetterModule());
+            builder.RegisterModule(new MonoMassSpectrumGetterModule()
+            {
+                Tolerance = SearchParameters.Access.PrecursorTolerance,
+                MaxIsotop = SearchParameters.Access.MaxIsotopic,
+                ScanRange = SearchParameters.Access.ScanRange
+            });
             builder.RegisterModule(new PrecursorMatcherModule() { Tolerance = SearchParameters.Access.MS1Tolerance });
             builder.RegisterModule(new SearchEThcDModule()
             {
@@ -131,7 +136,7 @@ namespace GlycoSeqWPFApp
 
         void worker_DoWork(object sender, DoWorkEventArgs e)
         {
-
+            searchEngine.Init(SearchParameters.Access.MSMSFile, SearchParameters.Access.FastaFile, SearchParameters.Access.OutputFile);
             for (int i = StartScan; i <= EndScan; i++)
             {
                 (sender as BackgroundWorker).ReportProgress(i);

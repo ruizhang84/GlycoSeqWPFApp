@@ -11,6 +11,7 @@ namespace GlycoSeqWPFApp
         //spectrum
         public double MS1Tolerance { get; set; } = 20;
         public double MSMSTolerance { get; set; } = 0.01;
+        public double PrecursorTolerance { get; set; } = 5;
         public string PeakPicking { get; set; } = "Top";
         public int MaxPeaksNum { get; set; } = 100;
 
@@ -35,6 +36,8 @@ namespace GlycoSeqWPFApp
         public double ScaleFactor { get; set; } = 1000.0;
 
         //result
+        public int MaxIsotopic { get; set; } = 10;
+        public int ScanRange { get; set; } = 10;
         public double FDRValue { get; set; } = 0.01;
 
         //file
@@ -66,7 +69,6 @@ namespace GlycoSeqWPFApp
             GlycanWeight = ConfigureParameters.Access.GlycanWeight;
             PeptideWeight = ConfigureParameters.Access.PeptideWeight;
             FDRValue = ConfigureParameters.Access.FDRValue;
-
         }
 
         protected static readonly Lazy<SearchParameters>
