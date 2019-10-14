@@ -21,6 +21,10 @@ namespace GlycoSeqWPFApp
         private readonly object queueLock = new object();
         private readonly object resultLock = new object();
 
+        string spectrumFile;
+        string proteinFile;
+        string outputFile;
+
         public MultiThreadSearch(Counter counter, IContainer container, IResults results)
         {
             this.results = results;
@@ -29,6 +33,9 @@ namespace GlycoSeqWPFApp
             tasks = new Queue<Tuple<int, int>>();
             GenerateTasks();
             maxThreads = SearchParameters.Access.ThreadNums;
+            spectrumFile = SearchParameters.Access.MSMSFile;
+            proteinFile = SearchParameters.Access.FastaFile;
+            outputFile = SearchParameters.Access.OutputFile;
         }
 
         public Tuple<int, int> TryGetTask()
@@ -52,7 +59,7 @@ namespace GlycoSeqWPFApp
         public void Run()
         {
             List<Task> searches = new List<Task>();
-            for (int i = 0; i < SearchParameters.Access.ThreadNums; i++)
+            for (int i = 0; i < maxThreads; i++)
             {
                 searches.Add(Task.Run(() => Search()));
             }
@@ -65,7 +72,7 @@ namespace GlycoSeqWPFApp
             using (var scope = container.BeginLifetimeScope())
             {
                 ISpectrumFactory spectrumFactory = scope.Resolve<ISpectrumFactory>();
-                spectrumFactory.Init(SearchParameters.Access.MSMSFile);
+                spectrumFactory.Init(spectrumFile);
                 int start = spectrumFactory.GetFirstScan();
                 int end = spectrumFactory.GetLastScan();
 
@@ -98,9 +105,7 @@ namespace GlycoSeqWPFApp
             {
                 Tuple<int, int> scanPair;
                 ISearchEngine searchEngine = scope.Resolve<ISearchEngine>();
-                searchEngine.Init(SearchParameters.Access.MSMSFile,
-                                SearchParameters.Access.FastaFile,
-                                SearchParameters.Access.OutputFile);
+                searchEngine.Init(spectrumFile, proteinFile, outputFile);
                 progress send = new progress((scan) => counter.Add(scan));
 
                 while ((scanPair = TryGetTask()) != null)

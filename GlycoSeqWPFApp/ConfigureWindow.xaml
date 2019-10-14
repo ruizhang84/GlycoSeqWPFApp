@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:GlycoSeqWPFApp"
         mc:Ignorable="d"
-        Title="Configuration" Height="500" Width="700">
+        Title="Configuration" Height="510" Width="700">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
