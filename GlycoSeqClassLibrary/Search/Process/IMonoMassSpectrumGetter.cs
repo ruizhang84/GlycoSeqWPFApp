@@ -9,7 +9,6 @@ namespace GlycoSeqClassLibrary.Search.Process
 {
     public interface IMonoMassSpectrumGetter
     {
-        double GetMonoMass(ISpectrumMSn MSnSpectrum);
-        void SetMonoMassSpectrum(ISpectrum MS1Spectrum);
+        double GetMonoMass(ISpectrum MSnSpectrum);
     }
 }

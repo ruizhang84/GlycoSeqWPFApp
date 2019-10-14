@@ -81,6 +81,7 @@
     <Compile Include="ConfigureWindow.xaml.cs">
       <DependentUpon>ConfigureWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="MultiThreadSearch.cs" />
     <Compile Include="SearchParameters.cs" />
     <Compile Include="SearchWindow.xaml.cs">
       <DependentUpon>SearchWindow.xaml</DependentUpon>

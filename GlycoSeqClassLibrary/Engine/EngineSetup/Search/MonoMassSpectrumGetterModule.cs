@@ -14,7 +14,6 @@ namespace GlycoSeqClassLibrary.Engine.EngineSetup.Search
     {
         public double Tolerance { get; set; } = 5;
         public int MaxIsotop { get; set; } = 10;
-        public int ScanRange { get; set; } = 10;
 
         protected override void Load(ContainerBuilder builder)
         {
@@ -23,7 +22,7 @@ namespace GlycoSeqClassLibrary.Engine.EngineSetup.Search
                 IComparer<IPoint> comparer = new PPMComparer(Tolerance);
                 ISearch matcherSpectrum = new BinarySearch(comparer);
 
-                return new GeneralMonoMassSpectrumGetter(matcherSpectrum, MaxIsotop, ScanRange);
+                return new GeneralMonoMassSpectrumGetter(matcherSpectrum, MaxIsotop);
             }).As<IMonoMassSpectrumGetter>();
         }
     }

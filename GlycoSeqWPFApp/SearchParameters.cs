@@ -29,6 +29,7 @@ namespace GlycoSeqWPFApp
         public int NeuGc { get; set; } = 0;
 
         //score
+        public int ThreadNums { get; set; } = 4;
         public double Alpah { get; set; } = 1.0;
         public double Beta { get; set; } = 0.0;
         public double GlycanWeight { get; set; } = 1.0;
@@ -64,6 +65,7 @@ namespace GlycoSeqWPFApp
             Fuc = ConfigureParameters.Access.Fuc;
             NeuAc = ConfigureParameters.Access.NeuAc;
             NeuGc = ConfigureParameters.Access.NeuGc;
+            ThreadNums = ConfigureParameters.Access.ThreadNums;
             Alpah = ConfigureParameters.Access.Alpah;
             Beta = ConfigureParameters.Access.Beta;
             GlycanWeight = ConfigureParameters.Access.GlycanWeight;

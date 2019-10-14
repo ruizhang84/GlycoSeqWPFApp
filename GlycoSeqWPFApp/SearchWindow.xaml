@@ -5,34 +5,20 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:GlycoSeqWPFApp"
         mc:Ignorable="d"
-        Title="Searching..." Height="170" Width="400">
+        Title="Searching..." Height="100" Width="400">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition />
         </Grid.RowDefinitions>
         <Grid Grid.Row="0">
-            <Label Content="Start Scan" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="12"/>
-            <TextBox Text="0" HorizontalAlignment="Center" VerticalAlignment="Center" Name="start" FontSize="12" Width="76" TextChanged="Start_TextChanged"/>
-        </Grid>
-        <Grid Grid.Row="1">
-            <Label Content="End Scan" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="12"/>
-            <TextBox Text="1000" HorizontalAlignment="Center" VerticalAlignment="Center" Name="end" FontSize="12" Width="76" TextChanged="End_TextChanged"/>
-        </Grid>
-        <Grid Grid.Row="2">
-            <Border  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" BorderBrush="Black" Margin="2">
+            <Border  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" BorderBrush="Black" Margin="10">
                 <ProgressBar Height="15" Width="350" Minimum="0" Maximum="1000" Name="SearchingStatus"/>
             </Border>
             <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Name="ProgessStatus" FontSize="12"/>
         </Grid>
-        <TextBlock Text="Waiting..." Grid.Row="3" Height="15" Width="350" Name="signal" Margin="4"/>
-        <Grid Grid.Row="4">
-            <Button Name="buttonRun" Content="Run" Margin="270,0,0,0" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Height="20" Width="74" FontSize="12" Click="Button_Click"/>
-        </Grid>
+        <TextBlock Text="Waiting..." Grid.Row="1" Height="15" Width="350" Name="Signal" Margin="0"/>
 
     </Grid>
 </Window>

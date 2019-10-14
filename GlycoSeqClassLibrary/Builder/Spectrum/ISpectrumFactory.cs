@@ -14,5 +14,6 @@ namespace GlycoSeqClassLibrary.Builder.Spectrum
         int GetMSnOrder(int scanNum);
         TypeOfMSActivation GetActivation(int scanNum);
         ISpectrum GetSpectrum(int scanNum);
+        void Init(string fileName);
     }
 }

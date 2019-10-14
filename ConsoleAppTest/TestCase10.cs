@@ -50,7 +50,7 @@ namespace ConsoleAppTest
             builder.RegisterModule(new ThermoRawSpectrumModule());
 
             builder.Register(c => new FDRSearchEThcDEngine(c.Resolve<IProteinCreator>(), c.Resolve<IPeptideCreator>(),
-                c.Resolve<IGlycanCreator>(), c.Resolve<ISpectrumReader>(), c.Resolve<ISpectrumFactory>(), c.Resolve<ISpectrumProcessing>(),
+                c.Resolve<IGlycanCreator>(), c.Resolve<ISpectrumFactory>(), c.Resolve<ISpectrumProcessing>(),
                 c.Resolve<IMonoMassSpectrumGetter>(), c.Resolve<IPrecursorMatcher>(), c.Resolve<ISearchEThcD>(),
                 c.Resolve<IResults>(), c.Resolve<IReportProducer>())).As<ISearchEngine>();
 
@@ -65,16 +65,19 @@ namespace ConsoleAppTest
                     @"C:\Users\iruiz\Desktop\app\HP.fasta",
                     @"C:\Users\iruiz\Desktop\app\test.csv");
 
-                for (int scan = searchEThcDEngine.GetFirstScan(); scan <= searchEThcDEngine.GetLastScan(); scan++)
-                {
-                    searchEThcDEngine.Search(scan);
-                }
+                progress sender = new progress(printScan);
+                searchEThcDEngine.Search(searchEThcDEngine.GetFirstScan(), searchEThcDEngine.GetLastScan(), sender);
                 searchEThcDEngine.Analyze(searchEThcDEngine.GetFirstScan(), searchEThcDEngine.GetLastScan());
 
             }
 
             Console.WriteLine($"Execution Time: {watch.ElapsedMilliseconds} ms");
             Console.Read();
+        }
+
+        public void printScan(int scan)
+        {
+            Console.WriteLine(scan);
         }
     }
 }

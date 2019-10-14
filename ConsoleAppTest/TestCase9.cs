@@ -39,18 +39,18 @@ namespace ConsoleAppTest
             builder.RegisterModule(new DoubleDigestionPeptidesModule() { Enzymes = enzymes, MiniLength = 7, MissCleavage = 2 });
 
             builder.RegisterModule(new FastaProteinModule());
-            builder.RegisterModule(new FDRCSVReportModule() { FDR = 0.01 });
+            builder.RegisterModule(new CSVReportModule());
 
-            builder.RegisterModule(new MonoMassSpectrumGetterModule());
-            builder.RegisterModule(new PrecursorMatcherModule() { Tolerance = 0.01 });
-            builder.RegisterModule(new SearchEThcDModule() { Tolerance = 20 });
+            builder.RegisterModule(new MonoMassSpectrumGetterModule() { Tolerance = 5} );
+            builder.RegisterModule(new PrecursorMatcherModule() { Tolerance = 20 });
+            builder.RegisterModule(new SearchEThcDModule() { Tolerance = 0.01 });
 
             builder.RegisterModule(new TopPeakPickingDelegatorModule() { MaxPeaks = 100});
             builder.RegisterModule(new SpectrumProcessingModule());
             builder.RegisterModule(new ThermoRawSpectrumModule());
 
             builder.Register(c => new GeneralSearchEThcDEngine(c.Resolve<IProteinCreator>(), c.Resolve<IPeptideCreator>(),
-                c.Resolve<IGlycanCreator>(), c.Resolve<ISpectrumReader>(), c.Resolve<ISpectrumFactory>(), c.Resolve<ISpectrumProcessing>(),
+                c.Resolve<IGlycanCreator>(), c.Resolve<ISpectrumFactory>(), c.Resolve<ISpectrumProcessing>(),
                 c.Resolve<IMonoMassSpectrumGetter>(), c.Resolve<IPrecursorMatcher>(), c.Resolve<ISearchEThcD>(),
                 c.Resolve<IResults>(), c.Resolve<IReportProducer>())).As<ISearchEngine>();
 
@@ -65,17 +65,19 @@ namespace ConsoleAppTest
                     @"C:\Users\iruiz\Desktop\app\HP.fasta",
                     @"C:\Users\iruiz\Desktop\app\test.csv");
 
-                for (int scan = searchEThcDEngine.GetFirstScan(); scan <= searchEThcDEngine.GetLastScan(); scan++)
-                {                   
-                    searchEThcDEngine.Search(scan);
-                }
-                searchEThcDEngine.Analyze(searchEThcDEngine.GetFirstScan(), searchEThcDEngine.GetLastScan());
+                progress sender = new progress(printScan);
+                searchEThcDEngine.Search(searchEThcDEngine.GetFirstScan(), 300, sender);
+                searchEThcDEngine.Analyze(searchEThcDEngine.GetFirstScan(), 300);
 
             }
 
             Console.WriteLine($"Execution Time: {watch.ElapsedMilliseconds} ms");
             Console.Read();
 
+        }
+        public void printScan(int scan)
+        {
+            Console.WriteLine(scan);
         }
     }
 }

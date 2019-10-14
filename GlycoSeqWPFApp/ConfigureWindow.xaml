@@ -115,22 +115,27 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition />
             </Grid.RowDefinitions>
-            <Label Content="GlycoSeq Score" Grid.Row="0"/>
+            <Label Content="Searching" Grid.Row="0"/>
             <StackPanel Orientation="Horizontal" Grid.Row="1">
+                <Label Content="Number of Threads"/>
+                <TextBox Name="ThreadNums" Text="4" VerticalAlignment="Center" FontSize="12" Width="40"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Grid.Row="2">
                 <Label Content="Peak (α × Intensity + β) : α"/>
                 <TextBox Name="Alpha" Text="1.0" VerticalAlignment="Center" FontSize="12" Width="40"/>
                 <Label Content="β"/>
                 <TextBox Name="Beta" Text="0.0" VerticalAlignment="Center" FontSize="12" Width="40"/>
             </StackPanel>
-            <StackPanel Orientation="Horizontal" Grid.Row="2">
+            <StackPanel Orientation="Horizontal" Grid.Row="3">
                 <Label Content="Matching Weight (Σw) : Glyco" />
                 <TextBox Name="GlycanWeight" Text="1.0" VerticalAlignment="Center" FontSize="12" Width="40"/>
                 <Label Content="Peptide"/>
                 <TextBox Name="PeptideWeight" Text="0.0" VerticalAlignment="Center" FontSize="12" Width="40"/>
             </StackPanel>
-            <Separator VerticalAlignment="Bottom" Grid.Row="3"/>
+            <Separator VerticalAlignment="Bottom" Grid.Row="4"/>
         </Grid>
 
         <Grid Grid.Row="4" Margin="10, 0, 10, 0">
@@ -149,7 +154,7 @@
 
         <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="5" Margin="0, 20, 0, 0">
             <Button x:Name="Save"  Content="Save" HorizontalAlignment="Right" VerticalAlignment="Top" Width="75" Margin="0,0,160,0" Click="Save_Click" />
-            <Button x:Name="Cancel"  Content="Cancel" HorizontalAlignment="Right" VerticalAlignment="Top" Width="75" Margin="0,0,85,0" Click="Cancel_Click" />
+            <Button x:Name="Cancel"  Content="Cancel" HorizontalAlignment="Right" VerticalAlignment="Top" Width="75" Margin="0,0,70,0" Click="Cancel_Click" />
         </Grid>
 
     </Grid>

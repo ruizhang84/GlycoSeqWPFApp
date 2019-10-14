@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using GlycoSeqClassLibrary.Algorithm;
+using GlycoSeqClassLibrary.Builder.Spectrum;
 using GlycoSeqClassLibrary.Model.Spectrum;
 using GlycoSeqClassLibrary.Util.CalcMass;
 
@@ -13,44 +14,19 @@ namespace GlycoSeqClassLibrary.Search.Process.MonoMass
     {
         readonly double Proton;
         readonly int maxIsotopic;
-        readonly int scanRange;
         ISearch matcher;
-        Dictionary<int, ISpectrum> spectrumTable;
 
-        public GeneralMonoMassSpectrumGetter(ISearch matcher, int maxIsotopic=10, int scanRange=10)
+        public GeneralMonoMassSpectrumGetter(ISearch matcher, int maxIsotopic = 10)
         {
             this.matcher = matcher;
             Proton = IonCalcMass.Hydrogen;
-            this.scanRange = scanRange;
             this.maxIsotopic = maxIsotopic;
-            // dictionary to store MS1 spectrum
-            spectrumTable = new Dictionary<int, ISpectrum>();
         }
 
-        private ISpectrum GetMonoSpectrum(int scanNum)
+        // assume the spectrum read sequentially
+        public double GetMonoMass(ISpectrum spectrum)
         {
-            for (int scan = scanNum; scan > scanNum - scanRange; scan--)
-            {
-                if (spectrumTable.ContainsKey(scan))
-                {
-                    return spectrumTable[scan];
-                }
-            }
-            return null;
-        }
-
-        public double GetMonoMass(ISpectrumMSn spectrum)
-        {
-            double mz = spectrum.GetParentMZ();
-            double monoMass = mz;
-
-            // set matcher data
-            ISpectrum monoSpectrum = GetMonoSpectrum(spectrum.GetScanNum());
-            if (monoSpectrum is null)
-            {
-                return monoMass;
-            }
-            else
+            if (spectrum.GetMSnOrder() == 1)
             {
                 List<IPoint> points = new List<IPoint>();
                 foreach (IPeak pk in spectrum.GetPeaks())
@@ -58,10 +34,18 @@ namespace GlycoSeqClassLibrary.Search.Process.MonoMass
                     points.Add(new PeakPoint(pk));
                 }
                 matcher.setData(points);
+
+                return 0;
             }
 
+            ISpectrumMSn spectrumMSn = spectrum as ISpectrumMSn;
+
+            double mz = spectrumMSn.GetParentMZ();
+            double monoMass = mz;
+
+           
             // search isotopic point on full MS spectrum
-            int charge = spectrum.GetParentCharge();
+            int charge = spectrumMSn.GetParentCharge();
             int isotopic = 0;
             while (isotopic < maxIsotopic)
             {
@@ -78,9 +62,5 @@ namespace GlycoSeqClassLibrary.Search.Process.MonoMass
             return matched.OrderBy(x => (x as PeakPoint).Intensity).First().GetValue();
         }
 
-        public void SetMonoMassSpectrum(ISpectrum spectrum)
-        {
-            spectrumTable[spectrum.GetScanNum()] = spectrum;
-        }
     }
 }

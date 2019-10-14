@@ -24,7 +24,7 @@ namespace GlycoSeqClassLibrary.Engine.EngineSetup.Search
             builder.Register(c => 
             {
                 IComparer<IPoint> comparer = new ToleranceComparer(Tolerance);
-                ISearch matcherPeaks = new BucketSearch(comparer, Tolerance);
+                ISearch matcherPeaks = new BinarySearch(comparer);
                 IScoreFactory scoreFactory = new WeightedScoreFactory(alpha, beta, glycanWeight, peptideWeight);
                 IGlycoPeptidePointsCreator glycoPeptidePointsCreator = new GeneralGlycoPeptideMassProxyPointsCreator();
 

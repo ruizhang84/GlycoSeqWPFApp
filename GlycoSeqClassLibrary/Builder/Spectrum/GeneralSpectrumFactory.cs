@@ -65,5 +65,10 @@ namespace GlycoSeqClassLibrary.Builder.Spectrum
             }
 
         }
+
+        public void Init(string fileName)
+        {
+            reader.Init(fileName);
+        }
     }
 }

@@ -21,6 +21,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -30,6 +31,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace GlycoSeqWPFApp
 {
@@ -39,37 +41,30 @@ namespace GlycoSeqWPFApp
     public partial class SearchWindow : Window
     {
         Autofac.IContainer container;
-        ILifetimeScope scope;
-        ISearchEngine searchEngine;
+        int progressCounter;
+        IResults Results { get; set; }
 
         public int StartScan { get; set; }
         public int EndScan { get; set; }
-        public int MinScan { get; set; }
-        public int MaxScan { get; set; }
 
         public SearchWindow()
         {
             InitializeComponent();
             InitializeContainer();
-            InitializeSearchEngine();
-        }
+            InitializeWindow();
+            ContentRendered += WindowLoaded;  
+        } 
 
-        ~SearchWindow()
+        private void InitializeWindow()
         {
-            scope.Dispose();
-        }
-
-        private void InitializeSearchEngine()
-        {
-            scope = container.BeginLifetimeScope();
-            searchEngine = scope.Resolve<ISearchEngine>();
-            searchEngine.Init(SearchParameters.Access.MSMSFile, 
-                            SearchParameters.Access.FastaFile, 
-                            SearchParameters.Access.OutputFile);
-            StartScan = MinScan = searchEngine.GetFirstScan();
-            EndScan = MaxScan = searchEngine.GetLastScan();
-            start.Text = StartScan.ToString();
-            end.Text = EndScan.ToString();
+            using (var scope = container.BeginLifetimeScope())
+            {
+                ISpectrumFactory spectrumFactory = scope.Resolve<ISpectrumFactory>();
+                Results = scope.Resolve<IResults>();
+                spectrumFactory.Init(SearchParameters.Access.MSMSFile);
+                StartScan  = spectrumFactory.GetFirstScan();
+                EndScan = spectrumFactory.GetLastScan();
+            }        
         }
 
         private void InitializeContainer()
@@ -86,9 +81,10 @@ namespace GlycoSeqWPFApp
             builder.RegisterModule(new NGlycoPeptideModule());
 
             builder.RegisterModule(new DoubleDigestionPeptidesModule()
-            { Enzymes = SearchParameters.Access.DigestionEnzyme,
-              MiniLength = SearchParameters.Access.MiniPeptideLength,
-              MissCleavage = SearchParameters.Access.MissCleavage
+            {
+                Enzymes = SearchParameters.Access.DigestionEnzyme,
+                MiniLength = SearchParameters.Access.MiniPeptideLength,
+                MissCleavage = SearchParameters.Access.MissCleavage
             });
 
             builder.RegisterModule(new FastaProteinModule());
@@ -97,15 +93,16 @@ namespace GlycoSeqWPFApp
             builder.RegisterModule(new MonoMassSpectrumGetterModule()
             {
                 Tolerance = SearchParameters.Access.PrecursorTolerance,
-                MaxIsotop = SearchParameters.Access.MaxIsotopic,
-                ScanRange = SearchParameters.Access.ScanRange
+                MaxIsotop = SearchParameters.Access.MaxIsotopic
             });
             builder.RegisterModule(new PrecursorMatcherModule() { Tolerance = SearchParameters.Access.MS1Tolerance });
             builder.RegisterModule(new SearchEThcDModule()
             {
                 Tolerance = SearchParameters.Access.MSMSTolerance,
-                alpha = SearchParameters.Access.Alpah, beta = SearchParameters.Access.Beta,
-                glycanWeight = SearchParameters.Access.GlycanWeight, peptideWeight = SearchParameters.Access.PeptideWeight
+                alpha = SearchParameters.Access.Alpah,
+                beta = SearchParameters.Access.Beta,
+                glycanWeight = SearchParameters.Access.GlycanWeight,
+                peptideWeight = SearchParameters.Access.PeptideWeight
             });
 
             builder.RegisterModule(new TopPeakPickingDelegatorModule() { MaxPeaks = SearchParameters.Access.MaxPeaksNum });
@@ -113,92 +110,85 @@ namespace GlycoSeqWPFApp
             builder.RegisterModule(new ThermoRawSpectrumModule());
 
             builder.Register(c => new FDRSearchEThcDEngine(c.Resolve<IProteinCreator>(), c.Resolve<IPeptideCreator>(),
-                c.Resolve<IGlycanCreator>(), c.Resolve<ISpectrumReader>(), c.Resolve<ISpectrumFactory>(), c.Resolve<ISpectrumProcessing>(),
+                c.Resolve<IGlycanCreator>(), c.Resolve<ISpectrumFactory>(), c.Resolve<ISpectrumProcessing>(),
                 c.Resolve<IMonoMassSpectrumGetter>(), c.Resolve<IPrecursorMatcher>(), c.Resolve<ISearchEThcD>(),
                 c.Resolve<IResults>(), c.Resolve<IReportProducer>())).As<ISearchEngine>();
 
-           container  = builder.Build();
+            container = builder.Build();
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void WindowLoaded(object sender, EventArgs e)
         {
-            BackgroundWorker worker = new BackgroundWorker();
-            worker.WorkerReportsProgress = true;
-            worker.DoWork += worker_DoWork;
-            worker.ProgressChanged += worker_ProgressChanged;
-            worker.RunWorkerCompleted += worker_RunWorkCompleted;
-            signal.Text = "Searching...";
-            worker.RunWorkerAsync();
-            buttonRun.IsEnabled = false;
-            start.IsEnabled = false;
-            end.IsEnabled = false;
+
+            Task.Run(Process);
+        } 
+
+        private Task Process()
+        {
+            progressCounter = 0;
+            Counter counter = new Counter();
+            counter.progressChange += SearchProgressChanged;
+
+            UpdateSignal("Searching...");
+            MultiThreadSearch search = new MultiThreadSearch(counter, container, Results);
+            search.Run();
+
+            UpdateSignal("Analyzing...");
+            Analyze();
+
+            UpdateSignal("Done");
+            return Task.CompletedTask;
         }
 
-        void worker_DoWork(object sender, DoWorkEventArgs e)
+        private void Analyze()
         {
-            searchEngine.Init(SearchParameters.Access.MSMSFile, SearchParameters.Access.FastaFile, SearchParameters.Access.OutputFile);
-            for (int i = StartScan; i <= EndScan; i++)
+            using (var scope = container.BeginLifetimeScope())
             {
-                (sender as BackgroundWorker).ReportProgress(i);
-                searchEngine.Search(i);
+                ISearchEngine searchEngine = scope.Resolve<ISearchEngine>();
+                searchEngine.Init(SearchParameters.Access.MSMSFile,
+                                SearchParameters.Access.FastaFile,
+                                SearchParameters.Access.OutputFile);
+                searchEngine.Analyze(StartScan, EndScan, Results);
             }
         }
 
-        void worker_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        private void UpdateSignal(string signal)
         {
-            ProgessStatus.Text = e.ProgressPercentage.ToString();
-            SearchingStatus.Value = Math.Max(SearchingStatus.Value,
-                (e.ProgressPercentage - StartScan) * 1.0 / (EndScan - StartScan) * 1000.0);
+            Dispatcher.BeginInvoke(
+                DispatcherPriority.Normal,
+                new ThreadStart(() => Signal.Text = signal));
         }
 
-        void worker_RunWorkCompleted(object sender, RunWorkerCompletedEventArgs e)
+        private void UpdateProgress()
         {
-            searchEngine.Analyze(StartScan, EndScan);
-            signal.Text = "Done";
+            SearchingStatus.Value = progressCounter * 1.0 / (EndScan - StartScan) * 1000.0;
+            ProgessStatus.Text = progressCounter.ToString();
         }
 
-        private void Start_TextChanged(object sender, TextChangedEventArgs e)
+        private void SearchProgressChanged(object sender, EventArgs e)
         {
-            int value = -1;
-            if (Int32.TryParse(start.Text, out value))
-            {
-                if (value <= MaxScan && value >= MinScan)
-                {
-                    StartScan = value;
-                }
-                else
-                {
-                    start.Text = MinScan.ToString();
-                }
-            }
-            else
-            {
-                start.Text = StartScan.ToString();
-            }
-
-        }
-
-        private void End_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            int value = -1;
-            if (int.TryParse(end.Text, out value))
-            {
-                if (value <= MaxScan && value >= MinScan)
-                {
-                    EndScan = value;
-                }
-                else
-                {
-                    end.Text = MaxScan.ToString();
-                }
-
-            }
-            else
-            {
-                end.Text = EndScan.ToString();
-            }
-        }
-
-
+            Interlocked.Increment(ref progressCounter); 
+            Dispatcher.BeginInvoke(
+                DispatcherPriority.Normal,
+                new ThreadStart(UpdateProgress));
+        } 
     }
+
+    public class Counter
+    {
+        public event EventHandler progressChange;
+
+        protected virtual void OnProgressChanged(EventArgs e)
+        {
+            EventHandler handler = progressChange;
+            handler?.Invoke(this, e);
+        }
+
+        public void Add(int scan)
+        {
+            EventArgs e = new EventArgs();
+            OnProgressChanged(e);
+        }
+    }
+
 }

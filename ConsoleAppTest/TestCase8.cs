@@ -39,6 +39,11 @@ namespace ConsoleAppTest
 {
     public class TestCase8 : TestCase
     {
+        public void printScan(int scan)
+        {
+            Console.WriteLine(scan);
+        }
+
         public void Run()
         {
 
@@ -104,7 +109,7 @@ namespace ConsoleAppTest
             IReportProducer reportProducer = new CSVReportProducer();
 
             ISearchEngine searchEThcDEngine = new GeneralSearchEThcDEngine(proteinCreator, peptideCreator, glycanCreator, 
-                spectrumReader, spectrumFactory, spectrumProcessing, monoMassSpectrumGetter, precursorMatcher, searchEThcDRunner,
+                spectrumFactory, spectrumProcessing, monoMassSpectrumGetter, precursorMatcher, searchEThcDRunner,
                 results, reportProducer);
 
             searchEThcDEngine.Init(
@@ -112,10 +117,8 @@ namespace ConsoleAppTest
                 @"C:\Users\iruiz\Desktop\app\HP.fasta",
                 @"C:\Users\iruiz\Desktop\app\test.csv");
 
-            for(int scan = searchEThcDEngine.GetFirstScan(); scan <= searchEThcDEngine.GetLastScan(); scan++)
-            {
-                searchEThcDEngine.Search(scan);
-            }
+            progress sender = new progress(printScan);
+            searchEThcDEngine.Search(searchEThcDEngine.GetFirstScan(), searchEThcDEngine.GetLastScan(), sender);
 
             searchEThcDEngine.Analyze(searchEThcDEngine.GetFirstScan(), searchEThcDEngine.GetLastScan());
             Console.WriteLine($"Execution Time: {watch.ElapsedMilliseconds} ms");

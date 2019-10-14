@@ -13,6 +13,7 @@ namespace GlycoSeqClassLibrary.Algorithm
 
         public AbstractSearch(IComparer<IPoint> comparer)
         {
+            data = new List<IPoint>();
             this.comparer = comparer;
         }
 

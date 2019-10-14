@@ -24,7 +24,6 @@ namespace GlycoSeqClassLibrary.Engine.SearchEThcD
         public FDRSearchEThcDEngine(IProteinCreator proteinCreator,
             IPeptideCreator peptideCreator,
             IGlycanCreator glycanCreator,
-            ISpectrumReader spectrumReader,
             ISpectrumFactory spectrumFactory,
             ISpectrumProcessing spectrumProcessing,
             IMonoMassSpectrumGetter monoMassSpectrumGetter,
@@ -33,7 +32,7 @@ namespace GlycoSeqClassLibrary.Engine.SearchEThcD
             IResults results,
             IReportProducer reportProducer,
             double pesudoMass = 50.0):
-            base(proteinCreator, peptideCreator, glycanCreator, spectrumReader, spectrumFactory,
+            base(proteinCreator, peptideCreator, glycanCreator, spectrumFactory,
                 spectrumProcessing, monoMassSpectrumGetter, precursorMatcher, searchEThcDRunner, results, reportProducer)
         {
             this.pesudoMass = pesudoMass;
@@ -42,16 +41,14 @@ namespace GlycoSeqClassLibrary.Engine.SearchEThcD
         public override void Search(int scan)
         {
             ISpectrum spectrum = spectrumFactory.GetSpectrum(scan);
+            double monoMass = monoMassSpectrumGetter.GetMonoMass(spectrum); // assume read spectrum sequentially.
             if (spectrum.GetMSnOrder() < 2)
             {
-                monoMassSpectrumGetter.SetMonoMassSpectrum(spectrum);
                 return;
             }
 
             // precursor
-            double monoMass = monoMassSpectrumGetter.GetMonoMass(spectrum as ISpectrumMSn);
             spectrumProcessing.Process(spectrum);
-
             List<IGlycoPeptide> glycoPeptides = precursorMatcher.Match(spectrum, monoMass);
             List<IGlycoPeptide> decoyGlycoPeptides = precursorMatcher.Match(spectrum, monoMass + pesudoMass);
 

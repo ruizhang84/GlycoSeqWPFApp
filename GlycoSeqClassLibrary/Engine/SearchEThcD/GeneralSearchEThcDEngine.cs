@@ -34,7 +34,6 @@ namespace GlycoSeqClassLibrary.Engine.SearchEThcD
         protected IGlycanCreator glycanCreator;
         protected List<IGlycan> glycans;
 
-        protected ISpectrumReader spectrumReader;
         protected ISpectrumFactory spectrumFactory;
 
         protected ISpectrumProcessing spectrumProcessing;
@@ -45,15 +44,14 @@ namespace GlycoSeqClassLibrary.Engine.SearchEThcD
         protected ISearchEThcD searchEThcDRunner;
 
         protected IResults results;
-        protected IReportProducer reportProducer;
+        protected IReportProducer reportProducer;       
 
         public GeneralSearchEThcDEngine(
             IProteinCreator proteinCreator,
             IPeptideCreator peptideCreator,
             IGlycanCreator glycanCreator,
-            ISpectrumReader spectrumReader, 
             ISpectrumFactory spectrumFactory,
-            ISpectrumProcessing spectrumProcessing, 
+            ISpectrumProcessing spectrumProcessing,
             IMonoMassSpectrumGetter monoMassSpectrumGetter,
             IPrecursorMatcher precursorMatcher,
             ISearchEThcD searchEThcDRunner,
@@ -71,7 +69,6 @@ namespace GlycoSeqClassLibrary.Engine.SearchEThcD
             this.glycanCreator = glycanCreator;
 
             // spectrum
-            this.spectrumReader = spectrumReader;
             this.spectrumFactory = spectrumFactory;
 
             // spectrum processing
@@ -101,7 +98,7 @@ namespace GlycoSeqClassLibrary.Engine.SearchEThcD
 
         public void Init(string spectrumFileLocation, string peptideFileLocation, string outputLocation)
         {
-            spectrumReader.Init(spectrumFileLocation);
+            spectrumFactory.Init(spectrumFileLocation);
             proteins = proteinCreator.Create(peptideFileLocation);
             HashSet<string> seen = new HashSet<string>();
             peptides = new List<IPeptide>();
@@ -125,14 +122,13 @@ namespace GlycoSeqClassLibrary.Engine.SearchEThcD
         public virtual void Search(int scan)
         {
             ISpectrum spectrum = spectrumFactory.GetSpectrum(scan);
+            double monoMass = monoMassSpectrumGetter.GetMonoMass(spectrum);     //assume read spectrum sequentially
             if (spectrum.GetMSnOrder() < 2)
             {
-                monoMassSpectrumGetter.SetMonoMassSpectrum(spectrum);
                 return;
             }
             
             // precursor
-            double monoMass = monoMassSpectrumGetter.GetMonoMass(spectrum as ISpectrumMSn);
             spectrumProcessing.Process(spectrum);
             List<IGlycoPeptide> glycoPeptides = precursorMatcher.Match(spectrum, monoMass);
 
@@ -154,8 +150,26 @@ namespace GlycoSeqClassLibrary.Engine.SearchEThcD
 
         public void Analyze(int start, int end)
         {
-            reportProducer.Report(results, start, end); 
+           Analyze(start, end, results); 
         }
 
+        public void Analyze(int start, int end, IResults results)
+        {
+            reportProducer.Report(results, start, end);
+        }
+
+        public void Search(int start, int end, progress sender)
+        {
+            for (int i = start; i <= end; i++)
+            {
+                Search(i);
+                sender(i);
+            }
+        }
+
+        public IResults GetResults()
+        {
+            return results;
+        }
     }
 }

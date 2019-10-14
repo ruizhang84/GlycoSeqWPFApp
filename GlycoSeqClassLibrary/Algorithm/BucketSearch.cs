@@ -85,7 +85,7 @@ namespace GlycoSeqClassLibrary.Algorithm
 
             for (int i = -1; i <= 1; i++)
             {
-                if (i == 0 || index + i < 0 || index + i > pointTable.Length)
+                if (i == 0 || index + i < 0 || index + i >= pointTable.Length)
                     continue;
                 
                 foreach (IPoint p in pointTable[index + i])

@@ -70,6 +70,7 @@ namespace GlycoSeqWPFApp
                 }
             }
 
+            ThreadNums.Text = SearchParameters.Access.ThreadNums.ToString();
             Alpha.Text = SearchParameters.Access.Alpah.ToString();
             Beta.Text = SearchParameters.Access.Beta.ToString();
             GlycanWeight.Text = SearchParameters.Access.GlycanWeight.ToString();
@@ -117,6 +118,17 @@ namespace GlycoSeqWPFApp
         private bool SaveScore()
         {
             double value = 1.0;
+            int nums = 4;
+            if (int.TryParse(ThreadNums.Text, out nums))
+            {
+                ConfigureParameters.Access.ThreadNums = nums;
+            }
+            else
+            {
+                MessageBox.Show("Alpha value is invalid!");
+                return false;
+            }
+
             if (double.TryParse(Alpha.Text, out value))
             {
                 ConfigureParameters.Access.Alpah = value;

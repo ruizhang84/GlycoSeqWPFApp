@@ -12,6 +12,11 @@ namespace GlycoSeqClassLibrary.Analyze.Result
         Dictionary<int, ISpectrum> spectrumTable;
         Dictionary<int, List<IScore>> scoreTable;
 
+        public List<int> GetScans()
+        {
+            return spectrumTable.Keys.ToList();
+        }
+
         public GeneralResults()
         {
             spectrumTable = new Dictionary<int, ISpectrum>();
@@ -44,6 +49,16 @@ namespace GlycoSeqClassLibrary.Analyze.Result
             int scan = spectrum.GetScanNum();
             spectrumTable[scan] = spectrum;
             scoreTable[scan] = score;
+        }
+
+        public void Merge(IResults results)
+        {
+            foreach (int scan in results.GetScans())
+            {
+                List<IScore> scores = results.GetResult(scan);
+                spectrumTable[scan] = results.GetSpectrum(scan);
+                scoreTable[scan] = scores;
+            }
         }
     }
 }

@@ -13,7 +13,7 @@ namespace GlycoSeqClassLibrary.Engine.EngineSetup.Spectrum
     {
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterInstance(new ThermoRawSpectrumReader()).As<ISpectrumReader>();
+            builder.Register(c => new ThermoRawSpectrumReader()).As<ISpectrumReader>();
             builder.Register(c => new GeneralSpectrumFactory(c.Resolve<ISpectrumReader>())).As<ISpectrumFactory>();
 
         }
