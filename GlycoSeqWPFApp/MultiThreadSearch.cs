@@ -30,12 +30,14 @@ namespace GlycoSeqWPFApp
             this.results = results;
             this.counter = counter;
             this.container = container;
-            tasks = new Queue<Tuple<int, int>>();
-            GenerateTasks();
-            maxThreads = SearchParameters.Access.ThreadNums;
+
             spectrumFile = SearchParameters.Access.MSMSFile;
             proteinFile = SearchParameters.Access.FastaFile;
             outputFile = SearchParameters.Access.OutputFile;
+            
+            tasks = new Queue<Tuple<int, int>>();
+            maxThreads = SearchParameters.Access.ThreadNums;
+            GenerateTasks();
         }
 
         public Tuple<int, int> TryGetTask()
