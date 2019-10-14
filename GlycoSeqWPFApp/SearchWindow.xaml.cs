@@ -52,7 +52,7 @@ namespace GlycoSeqWPFApp
             InitializeComponent();
             InitializeContainer();
             InitializeWindow();
-            ContentRendered += WindowLoaded;  
+            Loaded += WindowLoaded;  
         } 
 
         private void InitializeWindow()
@@ -119,7 +119,6 @@ namespace GlycoSeqWPFApp
 
         private void WindowLoaded(object sender, EventArgs e)
         {
-
             Task.Run(Process);
         } 
 
@@ -161,16 +160,19 @@ namespace GlycoSeqWPFApp
 
         private void UpdateProgress()
         {
-            SearchingStatus.Value = progressCounter * 1.0 / (EndScan - StartScan) * 1000.0;
-            ProgessStatus.Text = progressCounter.ToString();
+            Dispatcher.BeginInvoke(
+                DispatcherPriority.Normal,
+                new ThreadStart(() =>
+                    {
+                        SearchingStatus.Value = progressCounter * 1.0 / (EndScan - StartScan) * 1000.0;
+                        ProgessStatus.Text = progressCounter.ToString();
+                    }));            
         }
 
         private void SearchProgressChanged(object sender, EventArgs e)
         {
-            Interlocked.Increment(ref progressCounter); 
-            Dispatcher.BeginInvoke(
-                DispatcherPriority.Normal,
-                new ThreadStart(UpdateProgress));
+            Interlocked.Increment(ref progressCounter);
+            UpdateProgress();
         } 
     }
 
