@@ -94,22 +94,21 @@ namespace GlycoSeqWPFApp
 
         private void Search()
         {
-            while (true)
+            using (var scope = container.BeginLifetimeScope())
             {
-                Tuple<int, int> scanPair = TryGetTask();
-                if (scanPair is null)
-                    break;
+                Tuple<int, int> scanPair;
+                ISearchEngine searchEngine = scope.Resolve<ISearchEngine>();
+                searchEngine.Init(SearchParameters.Access.MSMSFile,
+                                SearchParameters.Access.FastaFile,
+                                SearchParameters.Access.OutputFile);
+                progress send = new progress((scan) => counter.Add(scan));
 
-                using (var scope = container.BeginLifetimeScope())
+                while ((scanPair = TryGetTask()) != null)
                 {
-                    ISearchEngine searchEngine = scope.Resolve<ISearchEngine>();
-                    searchEngine.Init(SearchParameters.Access.MSMSFile,
-                                    SearchParameters.Access.FastaFile,
-                                    SearchParameters.Access.OutputFile);
-                    progress send = new progress((scan) => counter.Add(scan));
                     searchEngine.Search(scanPair.Item1, scanPair.Item2, send);
-                    UpdateTask(searchEngine.GetResults());
                 }
+
+                UpdateTask(searchEngine.GetResults());
             }
         }
     }
