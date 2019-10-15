@@ -51,8 +51,7 @@ namespace GlycoSeqWPFApp
         {
             InitializeComponent();
             InitializeContainer();
-            InitializeWindow();
-            Loaded += WindowLoaded;  
+            InitializeWindow(); 
         } 
 
         private void InitializeWindow()
@@ -117,11 +116,6 @@ namespace GlycoSeqWPFApp
             container = builder.Build();
         }
 
-        private void WindowLoaded(object sender, EventArgs e)
-        {
-            Task.Run(Process);
-        } 
-
         private Task Process()
         {
             progressCounter = 0;
@@ -173,7 +167,13 @@ namespace GlycoSeqWPFApp
         {
             Interlocked.Increment(ref progressCounter);
             UpdateProgress();
-        } 
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            buttonRun.IsEnabled = false;
+            Task.Run(Process);
+        }
     }
 
     public class Counter

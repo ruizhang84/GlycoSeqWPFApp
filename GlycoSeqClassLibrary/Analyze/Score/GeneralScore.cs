@@ -46,7 +46,7 @@ namespace GlycoSeqClassLibrary.Analyze.Score
 
         public double GetScore()
         {
-            return score * 1000.0;
+            return score;
         }
     }
 }

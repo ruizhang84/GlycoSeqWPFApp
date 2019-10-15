@@ -51,6 +51,11 @@ namespace GlycoSeqClassLibrary.Analyze.Reporter
             decoys.Sort((a, b) => -a.CompareTo(b));
 
             // compare and compute
+            if (decoys.Count * 1.0 / targets.Count < fdr)   //trivial case
+            {
+                return 0;
+            }
+
             int i = 0, j = 0;
             while (i < targets.Count && j < decoys.Count)
             {

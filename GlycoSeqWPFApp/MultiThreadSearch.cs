@@ -17,26 +17,16 @@ namespace GlycoSeqWPFApp
         IResults results;
 
         Queue<Tuple<int, int>> tasks;
-        int maxThreads;
         private readonly object queueLock = new object();
         private readonly object resultLock = new object();
-
-        string spectrumFile;
-        string proteinFile;
-        string outputFile;
 
         public MultiThreadSearch(Counter counter, IContainer container, IResults results)
         {
             this.results = results;
             this.counter = counter;
             this.container = container;
-
-            spectrumFile = SearchParameters.Access.MSMSFile;
-            proteinFile = SearchParameters.Access.FastaFile;
-            outputFile = SearchParameters.Access.OutputFile;
             
             tasks = new Queue<Tuple<int, int>>();
-            maxThreads = SearchParameters.Access.ThreadNums;
             GenerateTasks();
         }
 
@@ -61,7 +51,7 @@ namespace GlycoSeqWPFApp
         public void Run()
         {
             List<Task> searches = new List<Task>();
-            for (int i = 0; i < maxThreads; i++)
+            for (int i = 0; i < SearchParameters.Access.ThreadNums; i++)
             {
                 searches.Add(Task.Run(() => Search()));
             }
@@ -74,7 +64,7 @@ namespace GlycoSeqWPFApp
             using (var scope = container.BeginLifetimeScope())
             {
                 ISpectrumFactory spectrumFactory = scope.Resolve<ISpectrumFactory>();
-                spectrumFactory.Init(spectrumFile);
+                spectrumFactory.Init(SearchParameters.Access.MSMSFile);
                 int start = spectrumFactory.GetFirstScan();
                 int end = spectrumFactory.GetLastScan();
 
@@ -107,7 +97,10 @@ namespace GlycoSeqWPFApp
             {
                 Tuple<int, int> scanPair;
                 ISearchEngine searchEngine = scope.Resolve<ISearchEngine>();
-                searchEngine.Init(spectrumFile, proteinFile, outputFile);
+                searchEngine.Init(
+                    SearchParameters.Access.MSMSFile, 
+                    SearchParameters.Access.FastaFile, 
+                    SearchParameters.Access.OutputFile);
                 progress send = new progress((scan) => counter.Add(scan));
 
                 while ((scanPair = TryGetTask()) != null)

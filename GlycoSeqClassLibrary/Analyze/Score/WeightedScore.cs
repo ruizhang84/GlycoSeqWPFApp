@@ -33,8 +33,7 @@ namespace GlycoSeqClassLibrary.Analyze.Score
             if (!peakInclude.Contains(mz))
             {
                 peakInclude.Add(mz);
-                score += alpha * peak.GetIntensity() + beta;
-                score *= weight;
+                score += (alpha * peak.GetIntensity() + beta) * weight;
             }
         }
 
