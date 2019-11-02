@@ -17,6 +17,7 @@ namespace GlycoSeqClassLibrary.Engine.EngineSetup.Search
         public double alpha { get; set; } = 1.0;
         public double beta { get; set; } = 0.0;
         public double glycanWeight { get; set; } = 1.0;
+        public double coreGlycanWeight { get; set; } = 1.0;
         public double peptideWeight { get; set; } = 0.0;
 
         protected override void Load(ContainerBuilder builder)
@@ -25,7 +26,7 @@ namespace GlycoSeqClassLibrary.Engine.EngineSetup.Search
             {
                 IComparer<IPoint> comparer = new ToleranceComparer(Tolerance);
                 ISearch matcherPeaks = new BinarySearch(comparer);
-                IScoreFactory scoreFactory = new WeightedScoreFactory(alpha, beta, glycanWeight, peptideWeight);
+                IScoreFactory scoreFactory = new WeightedScoreFactory(alpha, beta, glycanWeight, coreGlycanWeight, peptideWeight);
                 IGlycoPeptidePointsCreator glycoPeptidePointsCreator = new GeneralGlycoPeptideMassProxyPointsCreator();
 
                 return new GeneralSearchEThcD(matcherPeaks, scoreFactory, glycoPeptidePointsCreator);

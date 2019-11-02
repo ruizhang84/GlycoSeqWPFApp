@@ -42,6 +42,7 @@ namespace GlycoSeqClassLibrary.Builder.Chemistry.Glycan.Mass
             if (glycan is ITableNGlycanMassProxy && source is ITableNGlycanMassProxy)
             {
                 (glycan as ITableNGlycanMassProxy).AddRangeMass((source as ITableNGlycanMassProxy).GetMass());
+                (glycan as ITableNGlycanMassProxy).AddCoreRangeMass((source as ITableNGlycanMassProxy).GetCoreMass());
             }
             else
             {

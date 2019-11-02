@@ -77,8 +77,6 @@
     <Compile Include="Analyze\Reporter\CSVReportProducer.cs" />
     <Compile Include="Analyze\Reporter\FDRCSVReportProducer.cs" />
     <Compile Include="Analyze\Result\GeneralResults.cs" />
-    <Compile Include="Analyze\Score\GeneralScore.cs" />
-    <Compile Include="Analyze\Score\GeneralScoreFactory.cs" />
     <Compile Include="Analyze\Score\FDRScoreProxy.cs" />
     <Compile Include="Analyze\Score\IFDRScoreProxy.cs" />
     <Compile Include="Analyze\Score\WeightedScore.cs" />

@@ -132,6 +132,8 @@
             <StackPanel Orientation="Horizontal" Grid.Row="3">
                 <Label Content="Matching Weight (Σw) : Glyco" />
                 <TextBox Name="GlycanWeight" Text="1.0" VerticalAlignment="Center" FontSize="12" Width="40"/>
+                <Label Content="Pentacore" />
+                <TextBox Name="CoreGlycanWeight" Text="1.0" VerticalAlignment="Center" FontSize="12" Width="40"/>
                 <Label Content="Peptide"/>
                 <TextBox Name="PeptideWeight" Text="0.0" VerticalAlignment="Center" FontSize="12" Width="40"/>
             </StackPanel>

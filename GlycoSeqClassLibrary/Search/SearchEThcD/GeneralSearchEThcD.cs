@@ -31,7 +31,7 @@ namespace GlycoSeqClassLibrary.Search.SearchEThcD
         {
             List<IPoint> points = pointsCreator.Create(glycoPeptide, type);
             matcher.setData(points);
-            IScore score = scoreFactory.CreateScore(glycoPeptide, type);
+            IScore score = scoreFactory.CreateScore(glycoPeptide);
 
             foreach (IPeak peak in peaks)
             {
@@ -40,7 +40,18 @@ namespace GlycoSeqClassLibrary.Search.SearchEThcD
                     IPoint target = new GeneralPoint(SpectrumCalcMass.Instance.Compute(peak.GetMZ(), c));
                     if (matcher.Found(target))
                     {
-                        score.AddScore(peak);
+                        switch (type)
+                        {
+                            case MassType.CoreGlycan:
+                                score.AddCoreScore(peak);
+                                break;
+                            case MassType.Glycan:
+                                score.AddScore(peak);
+                                break;
+                            case MassType.Peptide:
+                                score.AddPeptideScore(peak);
+                                break;
+                        }
                         break;
                     }
                 }

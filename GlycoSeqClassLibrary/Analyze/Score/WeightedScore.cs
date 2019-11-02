@@ -1,4 +1,5 @@
-﻿using GlycoSeqClassLibrary.Model.Chemistry.GlycoPeptide;
+﻿using GlycoSeqClassLibrary.Builder.Chemistry.Glycopeptide.Mass;
+using GlycoSeqClassLibrary.Model.Chemistry.GlycoPeptide;
 using GlycoSeqClassLibrary.Model.Spectrum;
 using System;
 using System.Collections.Generic;
@@ -12,19 +13,55 @@ namespace GlycoSeqClassLibrary.Analyze.Score
     {
         IGlycoPeptide glycoPeptide;
         HashSet<double> peakInclude;
+
         double score;
         double alpha;
         double beta;
-        double weight;
+        double glycanWeight;
+        double coreGlycanWeight;
+        double peptideWeight;
 
-        public WeightedScore(IGlycoPeptide glycoPeptide, double alpha, double beta, double weight)
+        int glycanNum;
+        int coreGlycanNum;
+        int peptideNum;
+
+        public WeightedScore(IGlycoPeptide glycoPeptide, double alpha, double beta,
+            double glycanWeight, double coreGlycanWeight, double peptideWeight)
         {
             this.score = 0.0;
             this.glycoPeptide = glycoPeptide;
-            this.alpha = alpha;
+
+            this.alpha = alpha * 100;
             this.beta = beta;
-            this.weight = weight;
+            this.glycanWeight = glycanWeight;
+            this.coreGlycanWeight = coreGlycanWeight;
+            this.peptideWeight = peptideWeight;
+
+            glycanNum = (glycoPeptide as IGlycoPeptideMassProxy).GetMass(MassType.Glycan).Count;
+            coreGlycanNum = (glycoPeptide as IGlycoPeptideMassProxy).GetMass(MassType.CoreGlycan).Count;
+            peptideNum = (glycoPeptide as IGlycoPeptideMassProxy).GetMass(MassType.Peptide).Count;
+
             peakInclude = new HashSet<double>();
+        }
+
+        public void AddCoreScore(IPeak peak)
+        {
+            double mz = peak.GetMZ();
+            if (!peakInclude.Contains(mz))
+            {
+                peakInclude.Add(mz);
+                score += alpha * peak.GetIntensity() * Math.Pow(1.0 / coreGlycanNum, beta);
+            }
+        }
+
+        public void AddPeptideScore(IPeak peak)
+        {
+            double mz = peak.GetMZ();
+            if (!peakInclude.Contains(mz))
+            {
+                peakInclude.Add(mz);
+                score += alpha * peak.GetIntensity() * Math.Pow(1.0 / peptideNum, beta);
+            }
         }
 
         public void AddScore(IPeak peak)
@@ -33,7 +70,7 @@ namespace GlycoSeqClassLibrary.Analyze.Score
             if (!peakInclude.Contains(mz))
             {
                 peakInclude.Add(mz);
-                score += (alpha * peak.GetIntensity() + beta) * weight;
+                score += alpha * peak.GetIntensity() * Math.Pow(1.0 / glycanNum, beta);
             }
         }
 

@@ -23,32 +23,32 @@ namespace ConsoleAppTest
             List<double> target = new List<double>() { 1, 2, 4};
             List<double> decoy = new List<double>() { -1, 0, 3 };
 
-            for(int scan = 0; scan < Math.Max(target.Count, decoy.Count); scan++)
-            {
-                ISpectrum spectrum = new GeneralSpectrum(2, scan);
-                List<IScore> scores = new List<IScore>();
+            //for(int scan = 0; scan < Math.Max(target.Count, decoy.Count); scan++)
+            //{
+            //    ISpectrum spectrum = new GeneralSpectrum(2, scan);
+            //    List<IScore> scores = new List<IScore>();
 
-                if (scan < target.Count)
-                {
-                    IScore score1 = new GeneralScore(createGlyco(), 1, 0);
-                    IPeak peak1 = new GeneralPeak(1, target[scan]);
-                    score1.AddScore(peak1);
-                    scores.Add(new FDRScoreProxy(score1, true));
-                }
+            //    if (scan < target.Count)
+            //    {
+            //        IScore score1 = new GeneralScore(createGlyco(), 1, 0);
+            //        IPeak peak1 = new GeneralPeak(1, target[scan]);
+            //        score1.AddScore(peak1);
+            //        scores.Add(new FDRScoreProxy(score1, true));
+            //    }
 
-                if (scan < decoy.Count)
-                {
-                    IScore score2 = new GeneralScore(createGlyco(), 1, 0);
-                    IPeak peak2 = new GeneralPeak(1, decoy[scan]);
-                    score2.AddScore(peak2);
-                    scores.Add(new FDRScoreProxy(score2, false));
-                }
-                results.Add(spectrum, scores);
-            }
+            //    if (scan < decoy.Count)
+            //    {
+            //        IScore score2 = new GeneralScore(createGlyco(), 1, 0);
+            //        IPeak peak2 = new GeneralPeak(1, decoy[scan]);
+            //        score2.AddScore(peak2);
+            //        scores.Add(new FDRScoreProxy(score2, false));
+            //    }
+            //    results.Add(spectrum, scores);
+            //}
 
-            double scorecuttoff = GetScoreCutoff(results, 0, Math.Max(target.Count, decoy.Count), 0.34);
+            //double scorecuttoff = GetScoreCutoff(results, 0, Math.Max(target.Count, decoy.Count), 0.34);
 
-            Console.WriteLine(scorecuttoff);
+            //Console.WriteLine(scorecuttoff);
             Console.Read();
 
         }

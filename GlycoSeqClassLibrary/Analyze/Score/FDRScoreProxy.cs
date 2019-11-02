@@ -29,6 +29,15 @@ namespace GlycoSeqClassLibrary.Analyze.Score
         {
             score.AddScore(peak);
         }
+        public void AddCoreScore(IPeak peak)
+        {
+            score.AddCoreScore(peak);
+        }
+
+        public void AddPeptideScore(IPeak peak)
+        {
+            score.AddPeptideScore(peak);
+        }
 
         public IGlycoPeptide GetGlycoPeptide()
         {
@@ -44,5 +53,6 @@ namespace GlycoSeqClassLibrary.Analyze.Score
         {
             score.AddScore(other);
         }
+
     }
 }

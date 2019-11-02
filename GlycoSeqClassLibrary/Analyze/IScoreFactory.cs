@@ -9,6 +9,6 @@ namespace GlycoSeqClassLibrary.Analyze
 {
     public interface IScoreFactory
     {
-        IScore CreateScore(IGlycoPeptide glycoPeptide, object parameter);
+        IScore CreateScore(IGlycoPeptide glycoPeptide);
     }
 }

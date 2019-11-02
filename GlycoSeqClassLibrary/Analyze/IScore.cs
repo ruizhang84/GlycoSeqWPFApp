@@ -13,6 +13,8 @@ namespace GlycoSeqClassLibrary.Analyze
         IGlycoPeptide GetGlycoPeptide();
         double GetScore();
         void AddScore(IPeak peak);
+        void AddCoreScore(IPeak peak);
+        void AddPeptideScore(IPeak peak);
         void AddScore(IScore other);
     }
 }

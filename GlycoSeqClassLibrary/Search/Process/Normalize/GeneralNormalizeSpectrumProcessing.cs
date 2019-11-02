@@ -20,10 +20,10 @@ namespace GlycoSeqClassLibrary.Search.Process.Normalize
         {
             List<IPeak> peaks = spectrum.GetPeaks();
 
-            double sumIntensity = peaks.Max(x => x.GetIntensity());
+            double maxIntensity = Math.Log10(peaks.Max(x => x.GetIntensity()));
             for (int i = 0; i < peaks.Count; i++)
             {
-                peaks[i].SetIntensity(peaks[i].GetIntensity() * scale / sumIntensity);
+                peaks[i].SetIntensity(Math.Log10(peaks[i].GetIntensity()) * scale / maxIntensity);
             }
             spectrum.SetPeaks(peaks);
         }
