@@ -11,6 +11,7 @@ using GlycoSeqClassLibrary.Model.Chemistry.GlycoPeptide;
 using GlycoSeqClassLibrary.Model.Chemistry.Peptide;
 using GlycoSeqClassLibrary.Model.Chemistry.Protein;
 using GlycoSeqClassLibrary.Model.Spectrum;
+using GlycoSeqClassLibrary.Search.Filter;
 using GlycoSeqClassLibrary.Search.Precursor;
 using GlycoSeqClassLibrary.Search.Process;
 using GlycoSeqClassLibrary.Search.Process.PeakPicking;
@@ -40,11 +41,12 @@ namespace GlycoSeqClassLibrary.Engine.SearchEThcD
         protected IMonoMassSpectrumGetter monoMassSpectrumGetter;
 
         protected IPrecursorMatcher precursorMatcher;
+        protected ISpectrumFilter spectrumFilter; 
 
         protected ISearchEThcD searchEThcDRunner;
 
         protected IResults results;
-        protected IReportProducer reportProducer;       
+        protected IReportProducer reportProducer;
 
         public GeneralSearchEThcDEngine(
             IProteinCreator proteinCreator,
@@ -54,6 +56,7 @@ namespace GlycoSeqClassLibrary.Engine.SearchEThcD
             ISpectrumProcessing spectrumProcessing,
             IMonoMassSpectrumGetter monoMassSpectrumGetter,
             IPrecursorMatcher precursorMatcher,
+            ISpectrumFilter spectrumFilter,
             ISearchEThcD searchEThcDRunner,
             IResults results,
             IReportProducer reportProducer
@@ -77,6 +80,7 @@ namespace GlycoSeqClassLibrary.Engine.SearchEThcD
 
             // glycopeptides
             this.precursorMatcher = precursorMatcher;
+            this.spectrumFilter = spectrumFilter;
 
             // search
             this.searchEThcDRunner = searchEThcDRunner;
@@ -127,6 +131,9 @@ namespace GlycoSeqClassLibrary.Engine.SearchEThcD
             {
                 return;
             }
+
+            // filter spectrum
+            if (spectrumFilter.Filter(spectrum)) return;
             
             // precursor
             spectrumProcessing.Process(spectrum);

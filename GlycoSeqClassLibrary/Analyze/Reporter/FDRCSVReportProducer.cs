@@ -51,7 +51,7 @@ namespace GlycoSeqClassLibrary.Analyze.Reporter
             decoys.Sort((a, b) => -a.CompareTo(b));
 
             // compare and compute
-            if (decoys.Count * 1.0 / targets.Count < fdr)   //trivial case
+            if (decoys.Count * 1.0 / (decoys.Count + targets.Count) < fdr)   //trivial case
             {
                 return 0;
             }
@@ -62,7 +62,7 @@ namespace GlycoSeqClassLibrary.Analyze.Reporter
 
                 if (targets[i] > decoys[j])
                 {
-                    double rate = j * 1.0 / (i + 1);
+                    double rate = j * 1.0 / (i + j + 1);
                     if (rate <= fdr)
                     {
                         cutoff = Math.Min(cutoff, decoys[j]);
@@ -88,6 +88,7 @@ namespace GlycoSeqClassLibrary.Analyze.Reporter
                 {
                     if (results.Contains(scanNum))
                     {
+                        //List<IScore> scores = results.GetResult(scanNum);
                         List<IScore> scores = results.GetResult(scanNum).Where(score => !(score as IFDRScoreProxy).IsDecoy()).ToList();
                         ReportLines(results.GetSpectrum(scanNum), scores, scoreCutoff);
                     }

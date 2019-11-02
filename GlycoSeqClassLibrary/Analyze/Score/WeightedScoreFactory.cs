@@ -17,7 +17,7 @@ namespace GlycoSeqClassLibrary.Analyze.Score
 
         public WeightedScoreFactory(double alpha, double beta, double glycanWeight, double peptideWeight)
         {
-            this.alpha = alpha;
+            this.alpha = alpha * 100;
             this.beta = beta;
             this.glycanWeight = glycanWeight;
             this.peptideWeight = peptideWeight;
@@ -27,16 +27,21 @@ namespace GlycoSeqClassLibrary.Analyze.Score
         {
 
             MassType type = (MassType) parameter;
+            double normalizedBeta = beta; //* 1.0 / (glycoPeptide as IGlycoPeptideMassProxy).GetMass(type).Count;
             switch (type)
             {
                 case MassType.All:
-                    return new WeightedScore(glycoPeptide, alpha, beta, 1.0);
+                    return new WeightedScore(glycoPeptide, alpha, normalizedBeta, 1.0);
                 case MassType.Glycan:
-                    return new WeightedScore(glycoPeptide, alpha, beta, glycanWeight);
+                    return new WeightedScore(glycoPeptide, alpha, normalizedBeta, glycanWeight);
                 case MassType.Peptide:
-                    return new WeightedScore(glycoPeptide, alpha, beta, peptideWeight);
+                    return new WeightedScore(glycoPeptide, alpha, normalizedBeta, peptideWeight);
+                case MassType.ReverseGlycan:
+                    return new WeightedScore(glycoPeptide, alpha, normalizedBeta, glycanWeight);
+                case MassType.ReversePeptide:
+                    return new WeightedScore(glycoPeptide, alpha, normalizedBeta, peptideWeight);
                 default:
-                    return new WeightedScore(glycoPeptide, alpha, beta, 0.0);
+                    return new WeightedScore(glycoPeptide, alpha, normalizedBeta, 0.0);
             }
         }
     }

@@ -12,6 +12,7 @@ namespace GlycoSeqWPFApp
         public double MS1Tolerance { get; set; } = 20;
         public double MSMSTolerance { get; set; } = 0.01;
         public double PrecursorTolerance { get; set; } = 5;
+        public double FilterTolerance { get; set; } = 0.01;
         public string PeakPicking { get; set; } = "Top";
         public int MaxPeaksNum { get; set; } = 100;
 
@@ -34,7 +35,7 @@ namespace GlycoSeqWPFApp
         public double Beta { get; set; } = 0.0;
         public double GlycanWeight { get; set; } = 1.0;
         public double PeptideWeight { get; set; } = 0.0;
-        public double ScaleFactor { get; set; } = 1000.0;
+        public double ScaleFactor { get; set; } = 1.0;
 
         //result
         public int MaxIsotopic { get; set; } = 10;

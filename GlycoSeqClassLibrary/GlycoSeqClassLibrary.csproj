@@ -126,6 +126,7 @@
     <Compile Include="Engine\EngineSetup\Search\MonoMassSpectrumGetterModule.cs" />
     <Compile Include="Engine\EngineSetup\Search\PrecursorMatcherModule.cs" />
     <Compile Include="Engine\EngineSetup\Search\SearchEThcDModule.cs" />
+    <Compile Include="Engine\EngineSetup\Search\SpectrumFilterModule.cs" />
     <Compile Include="Engine\EngineSetup\Spectrum\TopPeakPickingDelegatorModule.cs" />
     <Compile Include="Engine\EngineSetup\Spectrum\SpectrumProcessingModule.cs" />
     <Compile Include="Engine\EngineSetup\Spectrum\ThermoRawSpectrumModule.cs" />
@@ -154,6 +155,8 @@
     <Compile Include="Model\Spectrum\ISpectrum.cs" />
     <Compile Include="Model\Spectrum\ISpectrumMSn.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Search\Filter\ISpectrumFilter.cs" />
+    <Compile Include="Search\Filter\OxoniumSpectrumFilter.cs" />
     <Compile Include="Search\Precursor\GeneralPrecursorMatcher.cs" />
     <Compile Include="Algorithm\GeneralPoint.cs" />
     <Compile Include="Search\Precursor\GlycanPoint.cs" />

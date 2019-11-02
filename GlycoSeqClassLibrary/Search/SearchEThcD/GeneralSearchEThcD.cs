@@ -52,10 +52,19 @@ namespace GlycoSeqClassLibrary.Search.SearchEThcD
         {
             double charge = (spectrum as ISpectrumMSn).GetParentCharge();
             List<IPeak> peaks = spectrum.GetPeaks();
-            IScore glycanScore = ComputeSearchScore(peaks, charge, glycoPeptide, MassType.Glycan);
+            IScore score = ComputeSearchScore(peaks, charge, glycoPeptide, MassType.Glycan);
             IScore peptideScore = ComputeSearchScore(peaks, charge, glycoPeptide, MassType.Peptide);
-            IScore score = scoreFactory.CreateScore(glycoPeptide, MassType.All);
-            score.AddScore(glycanScore);
+            score.AddScore(peptideScore);
+
+            return score;
+        }
+
+        public IScore SearchDecoy(ISpectrum spectrum, IGlycoPeptide glycoPeptide)
+        {
+            double charge = (spectrum as ISpectrumMSn).GetParentCharge();
+            List<IPeak> peaks = spectrum.GetPeaks();
+            IScore score = ComputeSearchScore(peaks, charge, glycoPeptide, MassType.Glycan);
+            IScore peptideScore = ComputeSearchScore(peaks, charge, glycoPeptide, MassType.Peptide);
             score.AddScore(peptideScore);
 
             return score;

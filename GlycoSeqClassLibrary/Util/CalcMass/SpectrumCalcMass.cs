@@ -30,6 +30,11 @@ namespace GlycoSeqClassLibrary.Util.CalcMass
             return (mz - ion) * charge;
         }
 
+        public double ComputeMZ(double mass, int charge)
+        {
+            return (mass + ion) / charge;
+        }
+
         public double ComputePPM(double expected, double observed)
         {
             return Math.Abs(expected - observed) / expected * 1000000.0;

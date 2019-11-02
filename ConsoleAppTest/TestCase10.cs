@@ -18,6 +18,7 @@ using GlycoSeqClassLibrary.Engine.EngineSetup.Report;
 using GlycoSeqClassLibrary.Engine.EngineSetup.Search;
 using GlycoSeqClassLibrary.Engine.EngineSetup.Spectrum;
 using GlycoSeqClassLibrary.Engine.SearchEThcD;
+using GlycoSeqClassLibrary.Search.Filter;
 using GlycoSeqClassLibrary.Search.Precursor;
 using GlycoSeqClassLibrary.Search.Process;
 using GlycoSeqClassLibrary.Search.SearchEThcD;
@@ -43,6 +44,7 @@ namespace ConsoleAppTest
 
             builder.RegisterModule(new MonoMassSpectrumGetterModule());
             builder.RegisterModule(new PrecursorMatcherModule() { Tolerance = 20 });
+            builder.RegisterModule(new SpectrumFilterModule() { Tolerance = 0.01 });
             builder.RegisterModule(new SearchEThcDModule() { Tolerance = 0.01, alpha = 1.0, beta = 0.0, glycanWeight = 1.0, peptideWeight = 0.2 });
 
             builder.RegisterModule(new TopPeakPickingDelegatorModule() { MaxPeaks = 100 });
@@ -51,7 +53,7 @@ namespace ConsoleAppTest
 
             builder.Register(c => new FDRSearchEThcDEngine(c.Resolve<IProteinCreator>(), c.Resolve<IPeptideCreator>(),
                 c.Resolve<IGlycanCreator>(), c.Resolve<ISpectrumFactory>(), c.Resolve<ISpectrumProcessing>(),
-                c.Resolve<IMonoMassSpectrumGetter>(), c.Resolve<IPrecursorMatcher>(), c.Resolve<ISearchEThcD>(),
+                c.Resolve<IMonoMassSpectrumGetter>(), c.Resolve<IPrecursorMatcher>(), c.Resolve<ISpectrumFilter>(), c.Resolve<ISearchEThcD>(),
                 c.Resolve<IResults>(), c.Resolve<IReportProducer>())).As<ISearchEngine>();
 
             IContainer Container = builder.Build();

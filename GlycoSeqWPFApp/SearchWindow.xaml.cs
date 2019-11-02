@@ -13,6 +13,7 @@ using GlycoSeqClassLibrary.Engine.EngineSetup.Report;
 using GlycoSeqClassLibrary.Engine.EngineSetup.Search;
 using GlycoSeqClassLibrary.Engine.EngineSetup.Spectrum;
 using GlycoSeqClassLibrary.Engine.SearchEThcD;
+using GlycoSeqClassLibrary.Search.Filter;
 using GlycoSeqClassLibrary.Search.Precursor;
 using GlycoSeqClassLibrary.Search.Process;
 using GlycoSeqClassLibrary.Search.SearchEThcD;
@@ -95,6 +96,7 @@ namespace GlycoSeqWPFApp
                 MaxIsotop = SearchParameters.Access.MaxIsotopic
             });
             builder.RegisterModule(new PrecursorMatcherModule() { Tolerance = SearchParameters.Access.MS1Tolerance });
+            builder.RegisterModule(new SpectrumFilterModule() { Tolerance = SearchParameters.Access.FilterTolerance });
             builder.RegisterModule(new SearchEThcDModule()
             {
                 Tolerance = SearchParameters.Access.MSMSTolerance,
@@ -110,7 +112,7 @@ namespace GlycoSeqWPFApp
 
             builder.Register(c => new FDRSearchEThcDEngine(c.Resolve<IProteinCreator>(), c.Resolve<IPeptideCreator>(),
                 c.Resolve<IGlycanCreator>(), c.Resolve<ISpectrumFactory>(), c.Resolve<ISpectrumProcessing>(),
-                c.Resolve<IMonoMassSpectrumGetter>(), c.Resolve<IPrecursorMatcher>(), c.Resolve<ISearchEThcD>(),
+                c.Resolve<IMonoMassSpectrumGetter>(), c.Resolve<IPrecursorMatcher>(), c.Resolve<ISpectrumFilter>(), c.Resolve<ISearchEThcD>(),
                 c.Resolve<IResults>(), c.Resolve<IReportProducer>())).As<ISearchEngine>();
 
             container = builder.Build();

@@ -12,5 +12,6 @@ namespace GlycoSeqClassLibrary.Search.SearchEThcD
     public interface ISearchEThcD
     {
        IScore Search(ISpectrum spectrum, IGlycoPeptide glycoPeptides);
+       IScore SearchDecoy(ISpectrum spectrum, IGlycoPeptide glycoPeptides);
     }
 }

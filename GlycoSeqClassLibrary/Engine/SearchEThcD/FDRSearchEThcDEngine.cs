@@ -6,6 +6,7 @@ using GlycoSeqClassLibrary.Builder.Chemistry.Protein;
 using GlycoSeqClassLibrary.Builder.Spectrum;
 using GlycoSeqClassLibrary.Model.Chemistry.GlycoPeptide;
 using GlycoSeqClassLibrary.Model.Spectrum;
+using GlycoSeqClassLibrary.Search.Filter;
 using GlycoSeqClassLibrary.Search.Precursor;
 using GlycoSeqClassLibrary.Search.Process;
 using GlycoSeqClassLibrary.Search.SearchEThcD;
@@ -28,14 +29,22 @@ namespace GlycoSeqClassLibrary.Engine.SearchEThcD
             ISpectrumProcessing spectrumProcessing,
             IMonoMassSpectrumGetter monoMassSpectrumGetter,
             IPrecursorMatcher precursorMatcher,
+            ISpectrumFilter spectrumFilter,
             ISearchEThcD searchEThcDRunner,
             IResults results,
             IReportProducer reportProducer,
-            double pesudoMass = 50.0):
+            double pesudoMass = 40.0):
             base(proteinCreator, peptideCreator, glycanCreator, spectrumFactory,
-                spectrumProcessing, monoMassSpectrumGetter, precursorMatcher, searchEThcDRunner, results, reportProducer)
+                spectrumProcessing, monoMassSpectrumGetter, precursorMatcher, spectrumFilter, searchEThcDRunner, results, reportProducer)
         {
             this.pesudoMass = pesudoMass;
+        }
+
+        private string Reverse(string s)
+        {
+            char[] charArray = s.ToCharArray();
+            Array.Reverse(charArray);
+            return new string(charArray);
         }
 
         public override void Search(int scan)
@@ -45,12 +54,16 @@ namespace GlycoSeqClassLibrary.Engine.SearchEThcD
             if (spectrum.GetMSnOrder() < 2)
             {
                 return;
-            }
+            } 
+
+            // ISpectrum filter
+            if (spectrumFilter.Filter(spectrum)) return;
 
             // precursor
             spectrumProcessing.Process(spectrum);
             List<IGlycoPeptide> glycoPeptides = precursorMatcher.Match(spectrum, monoMass);
-            List<IGlycoPeptide> decoyGlycoPeptides = precursorMatcher.Match(spectrum, monoMass + pesudoMass);
+            double charge = (spectrum as ISpectrumMSn).GetParentCharge();
+            List<IGlycoPeptide> decoyGlycoPeptides = precursorMatcher.Match(spectrum, monoMass + pesudoMass / charge);
 
             // search
             List<IScore> scores = new List<IScore>();
@@ -64,6 +77,7 @@ namespace GlycoSeqClassLibrary.Engine.SearchEThcD
             List<IScore> decoyScores = new List<IScore>();
             foreach (IGlycoPeptide decoyGlycoPeptide in decoyGlycoPeptides)
             {
+                decoyGlycoPeptide.GetPeptide().SetSequence(Reverse(decoyGlycoPeptide.GetPeptide().GetSequence()));
                 IScore score = searchEThcDRunner.Search(spectrum, decoyGlycoPeptide);
                 IScoreProxy scoreProxy = new FDRScoreProxy(score, false);
                 decoyScores.Add(scoreProxy);

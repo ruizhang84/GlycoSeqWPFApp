@@ -1,4 +1,5 @@
-﻿using GlycoSeqClassLibrary.Model.Chemistry.GlycoPeptide;
+﻿using GlycoSeqClassLibrary.Analyze.Score;
+using GlycoSeqClassLibrary.Model.Chemistry.GlycoPeptide;
 using GlycoSeqClassLibrary.Model.Spectrum;
 using System;
 using System.Collections.Generic;
@@ -81,7 +82,10 @@ namespace GlycoSeqClassLibrary.Analyze.Reporter
                     writer.Write((spectrum as ISpectrumMSn).GetParentMZ().ToString() + ", ");
                     writer.Write((spectrum as ISpectrumMSn).GetParentCharge().ToString() +", ");
                     if (cutoff > 0)
+                    //{ if (score is IFDRScoreProxy)
+                    //        writer.Write((score as IFDRScoreProxy).IsDecoy());
                         writer.Write(", ");
+                    //}
                     writer.WriteLine();
                 }
             }
