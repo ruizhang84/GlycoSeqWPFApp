@@ -14,6 +14,7 @@ namespace GlycoSeqClassLibrary.Analyze
         double GetScore();
         void AddScore(IPeak peak);
         void AddCoreScore(IPeak peak);
+        void AddBranchScore(IPeak peak);
         void AddPeptideScore(IPeak peak);
         void AddScore(IScore other);
     }

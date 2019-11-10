@@ -12,71 +12,93 @@ namespace GlycoSeqClassLibrary.Analyze.Score
     public class WeightedScore : IScore
     {
         IGlycoPeptide glycoPeptide;
-        HashSet<double> peakInclude;
 
-        double score;
+        // parameters
+        double extraScore;
         double alpha;
         double beta;
-        double glycanWeight;
-        double coreGlycanWeight;
-        double peptideWeight;
 
-        int glycanNum;
-        int coreGlycanNum;
-        int peptideNum;
+        // peaks
+        HashSet<double> peakInclude;
+        // theoritical
+        Dictionary<MassType, int> theory;
+        // matches
+        Dictionary<MassType, List<double>> matches;
+        // weights
+        Dictionary<MassType, double> weights;
 
-        public WeightedScore(IGlycoPeptide glycoPeptide, double alpha, double beta,
-            double glycanWeight, double coreGlycanWeight, double peptideWeight)
+        public WeightedScore(IGlycoPeptide glycoPeptide, double alpha, double beta, Dictionary<MassType, double> weights)
         {
-            this.score = 0.0;
+            this.extraScore = 0.0;
             this.glycoPeptide = glycoPeptide;
 
-            this.alpha = alpha * 100;
+            this.alpha = alpha;
             this.beta = beta;
-            this.glycanWeight = glycanWeight;
-            this.coreGlycanWeight = coreGlycanWeight;
-            this.peptideWeight = peptideWeight;
-
-            glycanNum = (glycoPeptide as IGlycoPeptideMassProxy).GetMass(MassType.Glycan).Count;
-            coreGlycanNum = (glycoPeptide as IGlycoPeptideMassProxy).GetMass(MassType.CoreGlycan).Count;
-            peptideNum = (glycoPeptide as IGlycoPeptideMassProxy).GetMass(MassType.Peptide).Count;
 
             peakInclude = new HashSet<double>();
+            theory = new Dictionary<MassType, int>();
+            matches = new Dictionary<MassType, List<double>>();
+            this.weights = weights;
+
+            foreach(MassType type in weights.Keys)
+            {
+                theory[type] = (glycoPeptide as IGlycoPeptideMassProxy).GetMass(type).Count;
+            }
+        }
+
+        private double ComputeScore()
+        {
+            double score = 0;
+            double scale = 1.0;
+            foreach(MassType type in matches.Keys)
+            {
+                scale *= Math.Pow(matches[type].Count / theory[type], weights[type]);
+            }
+            foreach (MassType type in matches.Keys)
+            {
+                score += matches[type].Sum() * scale;
+            }
+            return score;
+        }
+
+        private void AddScoreWithType(IPeak peak, MassType type)
+        {
+            if (!matches.ContainsKey(type))
+            {
+                matches[type] = new List<double>();
+            }
+
+            double mz = peak.GetMZ();
+            if (!peakInclude.Contains(mz))
+            {
+                peakInclude.Add(mz);
+                matches[type].Add(alpha * peak.GetIntensity() + beta);
+            }
         }
 
         public void AddCoreScore(IPeak peak)
         {
-            double mz = peak.GetMZ();
-            if (!peakInclude.Contains(mz))
-            {
-                peakInclude.Add(mz);
-                score += alpha * peak.GetIntensity() * Math.Pow(1.0 / coreGlycanNum, beta);
-            }
+            AddScoreWithType(peak, MassType.Core);
+        }
+
+        public void AddBranchScore(IPeak peak)
+        {
+            AddScoreWithType(peak, MassType.Branch);
         }
 
         public void AddPeptideScore(IPeak peak)
         {
-            double mz = peak.GetMZ();
-            if (!peakInclude.Contains(mz))
-            {
-                peakInclude.Add(mz);
-                score += alpha * peak.GetIntensity() * Math.Pow(1.0 / peptideNum, beta);
-            }
+            AddScoreWithType(peak, MassType.Peptide);
         }
 
         public void AddScore(IPeak peak)
         {
-            double mz = peak.GetMZ();
-            if (!peakInclude.Contains(mz))
-            {
-                peakInclude.Add(mz);
-                score += alpha * peak.GetIntensity() * Math.Pow(1.0 / glycanNum, beta);
-            }
+            AddScoreWithType(peak, MassType.Glycan);
         }
 
         public void AddScore(IScore other)
         {
-           score += other.GetScore() ;
+            extraScore += other.GetScore() ;
         }
 
         public IGlycoPeptide GetGlycoPeptide()
@@ -86,7 +108,7 @@ namespace GlycoSeqClassLibrary.Analyze.Score
 
         public double GetScore()
         {
-            return score;
+            return ComputeScore() + extraScore;
         }
     }
 }

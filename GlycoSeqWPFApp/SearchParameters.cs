@@ -35,6 +35,7 @@ namespace GlycoSeqWPFApp
         public double Beta { get; set; } = 0.0;
         public double GlycanWeight { get; set; } = 1.0;
         public double CoreGlycanWeight { get; set; } = 1.0;
+        public double BranchGlycanWeight { get; set; } = 1.0;
         public double PeptideWeight { get; set; } = 0.0;
         public double ScaleFactor { get; set; } = 1.0;
 
@@ -72,6 +73,7 @@ namespace GlycoSeqWPFApp
             Beta = ConfigureParameters.Access.Beta;
             GlycanWeight = ConfigureParameters.Access.GlycanWeight;
             CoreGlycanWeight = ConfigureParameters.Access.CoreGlycanWeight;
+            BranchGlycanWeight = ConfigureParameters.Access.BranchGlycanWeight;
             PeptideWeight = ConfigureParameters.Access.PeptideWeight;
             FDRValue = ConfigureParameters.Access.FDRValue;
         }

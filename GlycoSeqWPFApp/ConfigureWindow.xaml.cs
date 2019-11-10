@@ -75,6 +75,7 @@ namespace GlycoSeqWPFApp
             Beta.Text = SearchParameters.Access.Beta.ToString();
             GlycanWeight.Text = SearchParameters.Access.GlycanWeight.ToString();
             CoreGlycanWeight.Text = SearchParameters.Access.CoreGlycanWeight.ToString();
+            BranchGlycanWeight.Text = SearchParameters.Access.BranchGlycanWeight.ToString();
             PeptideWeight.Text = SearchParameters.Access.PeptideWeight.ToString();
 
             DigestionEnzymes.Text = string.Join("+", SearchParameters.Access.DigestionEnzyme);
@@ -167,6 +168,16 @@ namespace GlycoSeqWPFApp
             else
             {
                 MessageBox.Show("Glycan Pentacore's weight value is invalid!");
+                return false;
+            }
+
+            if (double.TryParse(BranchGlycanWeight.Text, out value))
+            {
+                ConfigureParameters.Access.BranchGlycanWeight = value;
+            }
+            else
+            {
+                MessageBox.Show("Glycan Branch's weight value is invalid!");
                 return false;
             }
 

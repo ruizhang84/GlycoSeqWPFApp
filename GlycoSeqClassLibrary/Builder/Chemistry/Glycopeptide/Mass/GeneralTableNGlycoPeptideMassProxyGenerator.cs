@@ -22,20 +22,24 @@ namespace GlycoSeqClassLibrary.Builder.Chemistry.Glycopeptide.Mass
                 foreach(double glycanMass in (glycan as ITableNGlycanMassProxy).GetMass())
                 {
                     glycoPeptideMassProxy.AddMass(glycanMass + 
-                        PeptideCalcMass.Instance.Compute(glycoPeptide.GetPeptide()), MassType.Glycan);
+                        PeptideCalcMass.Instance.Compute(glycoPeptide.GetPeptide()), MassType.Branch);
                 }
 
                 foreach (double glycanMass in (glycan as ITableNGlycanMassProxy).GetCoreMass())
                 {
-                    glycoPeptideMassProxy.AddMass(glycanMass + 
-                        PeptideCalcMass.Instance.Compute(glycoPeptide.GetPeptide()), MassType.CoreGlycan);
+                    glycoPeptideMassProxy.AddMass(glycanMass +
+                        PeptideCalcMass.Instance.Compute(glycoPeptide.GetPeptide()), MassType.Core);
                 }
+
+                glycoPeptideMassProxy.AddRangeMass(SingaturePeakCalcMass.Instance.ComputeComplex(glycan), MassType.Glycan);
 
                 double mass = GlycanCalcMass.Instance.Compute(glycan);
                 foreach (double peptideMass in PTMPeptideCalcMass.Compute(peptide.GetSequence(), modifySite))
                 {
                     glycoPeptideMassProxy.AddMass(mass + peptideMass, MassType.Peptide);
                 }
+                
+                
 
                 return glycoPeptideMassProxy;
 

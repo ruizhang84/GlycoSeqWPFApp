@@ -27,11 +27,11 @@ namespace GlycoSeqClassLibrary.Search.SearchEThcD
             pointsCreator = glycoPeptidePointsCreator;
         }
 
-        protected IScore ComputeSearchScore(List<IPeak> peaks, double charge, IGlycoPeptide glycoPeptide, MassType type)
+        protected void ComputeSearchScore(IScore score, List<IPeak> peaks,
+            double charge, IGlycoPeptide glycoPeptide, MassType type)
         {
             List<IPoint> points = pointsCreator.Create(glycoPeptide, type);
             matcher.setData(points);
-            IScore score = scoreFactory.CreateScore(glycoPeptide);
 
             foreach (IPeak peak in peaks)
             {
@@ -40,10 +40,16 @@ namespace GlycoSeqClassLibrary.Search.SearchEThcD
                     IPoint target = new GeneralPoint(SpectrumCalcMass.Instance.Compute(peak.GetMZ(), c));
                     if (matcher.Found(target))
                     {
+                        Console.WriteLine(glycoPeptide.GetPeptide().GetSequence());
+                        Console.WriteLine(glycoPeptide.GetGlycan().GetName());
+                        Console.WriteLine(peak.GetMZ().ToString() + " " + c.ToString() + ": " + type.ToString());
                         switch (type)
                         {
-                            case MassType.CoreGlycan:
+                            case MassType.Core:
                                 score.AddCoreScore(peak);
+                                break;
+                            case MassType.Branch:
+                                score.AddBranchScore(peak);
                                 break;
                             case MassType.Glycan:
                                 score.AddScore(peak);
@@ -51,33 +57,25 @@ namespace GlycoSeqClassLibrary.Search.SearchEThcD
                             case MassType.Peptide:
                                 score.AddPeptideScore(peak);
                                 break;
+                            default:
+                                break;
                         }
                         break;
                     }
                 }
             }
-            return score;
         }
 
         public IScore Search(ISpectrum spectrum, IGlycoPeptide glycoPeptide)
         {
             double charge = (spectrum as ISpectrumMSn).GetParentCharge();
             List<IPeak> peaks = spectrum.GetPeaks();
-            IScore score = ComputeSearchScore(peaks, charge, glycoPeptide, MassType.Glycan);
-            IScore peptideScore = ComputeSearchScore(peaks, charge, glycoPeptide, MassType.Peptide);
-            score.AddScore(peptideScore);
+            IScore score = scoreFactory.CreateScore(glycoPeptide);
 
-            return score;
-        }
-
-        public IScore SearchDecoy(ISpectrum spectrum, IGlycoPeptide glycoPeptide)
-        {
-            double charge = (spectrum as ISpectrumMSn).GetParentCharge();
-            List<IPeak> peaks = spectrum.GetPeaks();
-            IScore score = ComputeSearchScore(peaks, charge, glycoPeptide, MassType.Glycan);
-            IScore peptideScore = ComputeSearchScore(peaks, charge, glycoPeptide, MassType.Peptide);
-            score.AddScore(peptideScore);
-
+            ComputeSearchScore(score, peaks, charge, glycoPeptide, MassType.Glycan);
+            ComputeSearchScore(score, peaks, charge, glycoPeptide, MassType.Core);
+            ComputeSearchScore(score, peaks, charge, glycoPeptide, MassType.Branch);
+            ComputeSearchScore(score, peaks, charge, glycoPeptide, MassType.Peptide);
             return score;
         }
     }

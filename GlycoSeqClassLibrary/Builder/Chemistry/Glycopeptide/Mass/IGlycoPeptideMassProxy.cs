@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GlycoSeqClassLibrary.Builder.Chemistry.Glycopeptide.Mass
 {
-    public enum MassType { Glycan, CoreGlycan, Peptide, All}
+    public enum MassType { Core, Branch, Glycan, Peptide, All}
     public interface IGlycoPeptideMassProxy : IGlycoPeptideProxy
     {
         List<double> GetMass(MassType type);

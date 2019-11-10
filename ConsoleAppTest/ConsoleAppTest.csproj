@@ -70,14 +70,12 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestCase10.cs" />
     <Compile Include="TestCase11.cs" />
+    <Compile Include="TestCase12.cs" />
     <Compile Include="TestCase5.cs" />
     <Compile Include="TestCase1.cs" />
     <Compile Include="TestCase2.cs" />
     <Compile Include="TestCase3.cs" />
     <Compile Include="TestCase4.cs" />
-    <Compile Include="TestCase6.cs" />
-    <Compile Include="TestCase7.cs" />
-    <Compile Include="TestCase8.cs" />
     <Compile Include="TestCase9.cs" />
   </ItemGroup>
   <ItemGroup>

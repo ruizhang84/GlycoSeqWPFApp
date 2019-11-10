@@ -104,6 +104,7 @@ namespace GlycoSeqWPFApp
                 beta = SearchParameters.Access.Beta,
                 glycanWeight = SearchParameters.Access.GlycanWeight,
                 coreGlycanWeight = SearchParameters.Access.CoreGlycanWeight,
+                branchGlycanWeight = SearchParameters.Access.BranchGlycanWeight,
                 peptideWeight = SearchParameters.Access.PeptideWeight
             });
 

@@ -12,23 +12,18 @@ namespace GlycoSeqClassLibrary.Analyze.Score
     {
         double alpha;
         double beta;
-        double glycanWeight;
-        double coreGlycanWeight;
-        double peptideWeight;
+        Dictionary<MassType, double> weights;
 
-        public WeightedScoreFactory(double alpha, double beta, 
-            double glycanWeight, double coreGlycanWeight, double peptideWeight)
+        public WeightedScoreFactory(double alpha, double beta, Dictionary<MassType, double> weights)
         {
             this.alpha = alpha * 100;
             this.beta = beta;
-            this.glycanWeight = glycanWeight;
-            this.coreGlycanWeight = coreGlycanWeight;
-            this.peptideWeight = peptideWeight;
+            this.weights = weights;
         }
 
         public IScore CreateScore(IGlycoPeptide glycoPeptide)
         {
-            return new WeightedScore(glycoPeptide, alpha, beta, glycanWeight, coreGlycanWeight, peptideWeight);
+            return new WeightedScore(glycoPeptide, alpha, beta, weights);
         }
     }
 }

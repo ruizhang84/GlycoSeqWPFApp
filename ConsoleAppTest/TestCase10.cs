@@ -45,10 +45,10 @@ namespace ConsoleAppTest
             builder.RegisterModule(new MonoMassSpectrumGetterModule());
             builder.RegisterModule(new PrecursorMatcherModule() { Tolerance = 20 });
             builder.RegisterModule(new SpectrumFilterModule() { Tolerance = 0.01 });
-            builder.RegisterModule(new SearchEThcDModule() { Tolerance = 0.01, alpha = 1.0, beta = 0.0, glycanWeight = 1.0, peptideWeight = 0.2 });
+            builder.RegisterModule(new SearchEThcDModule() { Tolerance = 0.01, alpha = 1.0, beta = 0.0, glycanWeight = 1.0, coreGlycanWeight=1.0, peptideWeight = 0.2 });
 
             builder.RegisterModule(new TopPeakPickingDelegatorModule() { MaxPeaks = 100 });
-            builder.RegisterModule(new SpectrumProcessingModule() { ScaleFactor = 1000.0 });
+            builder.RegisterModule(new SpectrumProcessingModule() { ScaleFactor = 1.0 });
             builder.RegisterModule(new ThermoRawSpectrumModule());
 
             builder.Register(c => new FDRSearchEThcDEngine(c.Resolve<IProteinCreator>(), c.Resolve<IPeptideCreator>(),
@@ -68,8 +68,8 @@ namespace ConsoleAppTest
                     @"C:\Users\iruiz\Desktop\app\test.csv");
 
                 progress sender = new progress(printScan);
-                searchEThcDEngine.Search(searchEThcDEngine.GetFirstScan(), searchEThcDEngine.GetLastScan(), sender);
-                searchEThcDEngine.Analyze(searchEThcDEngine.GetFirstScan(), searchEThcDEngine.GetLastScan());
+                searchEThcDEngine.Search(7859, 7861, sender);
+                //searchEThcDEngine.Analyze(searchEThcDEngine.GetFirstScan(), searchEThcDEngine.GetLastScan());
 
             }
 

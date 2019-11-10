@@ -42,7 +42,11 @@ namespace GlycoSeqClassLibrary.Builder.Chemistry.Glycopeptide.Mass
 
         public List<double> GetMass(MassType type)
         {
-            return massTable[type].ToList();
+            if (massTable.ContainsKey(type))
+            {
+                return massTable[type].ToList();
+            }
+            return new List<double>();
         }
     }
 }
