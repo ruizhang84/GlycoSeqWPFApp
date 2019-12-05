@@ -1,4 +1,5 @@
 ﻿using GlycoSeqClassLibrary.Analyze.Score;
+using GlycoSeqClassLibrary.Builder.Chemistry.Glycopeptide.Mass;
 using GlycoSeqClassLibrary.Model.Chemistry.GlycoPeptide;
 using GlycoSeqClassLibrary.Model.Spectrum;
 using System;
@@ -37,11 +38,15 @@ namespace GlycoSeqClassLibrary.Analyze.Reporter
                 writer.Write("scan, ");
                 writer.Write("peptide, ");
                 writer.Write("glycan, ");
-                writer.Write("score, ");
+                writer.Write("Branch score, ");
+                writer.Write("Core score, ");
+                writer.Write("Glycan score, ");
+                writer.Write("Peptide score, ");
                 writer.Write("mz, ");
                 writer.Write("charge, ");
-                if (cutoff > 0)
-                    writer.Write("Score Cutoff:" + cutoff.ToString() + ", ");
+                writer.Write("decoy, ");
+                //if (cutoff > 0)
+                //writer.Write("Score Cutoff:" + cutoff.ToString() + ", ");
                 writer.WriteLine();
                 return true;
             }
@@ -78,14 +83,18 @@ namespace GlycoSeqClassLibrary.Analyze.Reporter
                     writer.Write(spectrum.GetScanNum().ToString() + ", ");
                     writer.Write(seq + ", ");
                     writer.Write(structure + ", ");
-                    writer.Write(score.GetScore().ToString() + ", ");
+                    writer.Write(score.GetScore(MassType.Branch).ToString() + ", ");
+                    writer.Write(score.GetScore(MassType.Core).ToString() + ", ");
+                    writer.Write(score.GetScore(MassType.Glycan).ToString() + ", ");
+                    writer.Write(score.GetScore(MassType.Peptide).ToString() + ", ");
                     writer.Write((spectrum as ISpectrumMSn).GetParentMZ().ToString() + ", ");
                     writer.Write((spectrum as ISpectrumMSn).GetParentCharge().ToString() +", ");
-                    if (cutoff > 0)
-                    //{ if (score is IFDRScoreProxy)
-                    //        writer.Write((score as IFDRScoreProxy).IsDecoy());
+
+                    if (score is IFDRScoreProxy)
+                    {
+                        writer.Write((score as IFDRScoreProxy).IsDecoy());
                         writer.Write(", ");
-                    //}
+                    }
                     writer.WriteLine();
                 }
             }

@@ -35,9 +35,8 @@ namespace GlycoSeqClassLibrary.Search.Filter
         {
             if (spectrum.GetMSnOrder() > 1)
             {
-                SetMatcher(spectrum);
-                int charge = (spectrum as ISpectrumMSn).GetParentCharge();
-                for(int z = 1; z <= charge; z++)
+                SetMatcher(spectrum); 
+                for(int z = 1; z <= 2; z++)
                 {
                     double mz = SpectrumCalcMass.Instance.ComputeMZ(GlycanCalcMass.HexNAc, z);
                     if (matcher.Found(new GeneralPoint(mz)))

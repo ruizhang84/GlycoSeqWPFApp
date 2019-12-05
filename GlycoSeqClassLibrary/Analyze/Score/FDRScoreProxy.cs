@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using GlycoSeqClassLibrary.Builder.Chemistry.Glycopeptide.Mass;
 using GlycoSeqClassLibrary.Model.Chemistry.GlycoPeptide;
 using GlycoSeqClassLibrary.Model.Spectrum;
 
@@ -59,5 +60,9 @@ namespace GlycoSeqClassLibrary.Analyze.Score
             score.AddScore(other);
         }
 
+        public double GetScore(MassType type)
+        {
+           return score.GetScore(type);
+        }
     }
 }

@@ -142,28 +142,41 @@ namespace ConsoleAppTest
 
                 double pairs = 0;
                 double count = 0;
+                int count2 = 0;
+                int count3 = 0;
                 foreach(string key in scanInfo.Keys)
                 {
                     List<int> scans = scanInfo[key];
                     if (scans.Count < 2) continue;
-                    for(int i = 0; i < scans.Count-1; i++)
+                    bool flag = false;
+                    for (int i = 0; i < scans.Count-1; i++)
                     {
+                       
                         for(int j = i+1; j < scans.Count; j++)
                         {
                             ISpectrum spectrumA = spectrumFacotry.GetSpectrum(scans[i]);
                             ISpectrum spectrumB = spectrumFacotry.GetSpectrum(scans[j]);
                             double cons = computeCos(spectrumA.GetPeaks(), spectrumB.GetPeaks(), 0.01);
-                            if (cons < 0.7)
+                            if (cons < 0.3)
                             {
-                                Console.WriteLine("spectrum: " + scans[i].ToString() 
+                                Console.WriteLine("spectrum: " + scans[i].ToString()
                                     + " " + scans[j].ToString());
                                 Console.WriteLine(cons);
                                 pairs++;
+                                flag = true;
                             }
+                            count3++;
                         }
-                        count++;
+                        
                     }
+                    count2 += scans.Count;
+                    
+                    if (flag)
+                        count++;
+                    Console.WriteLine(key);
                 }
+                Console.WriteLine(count2);
+                Console.WriteLine(count3);
                 Console.WriteLine($"There are {count} spectrum and {pairs} pairs");
             }
 

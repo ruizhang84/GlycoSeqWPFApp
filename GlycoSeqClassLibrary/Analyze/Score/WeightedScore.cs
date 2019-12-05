@@ -14,7 +14,6 @@ namespace GlycoSeqClassLibrary.Analyze.Score
         IGlycoPeptide glycoPeptide;
 
         // parameters
-        double extraScore;
         double alpha;
         double beta;
 
@@ -27,9 +26,9 @@ namespace GlycoSeqClassLibrary.Analyze.Score
         // weights
         Dictionary<MassType, double> weights;
 
-        public WeightedScore(IGlycoPeptide glycoPeptide, double alpha, double beta, Dictionary<MassType, double> weights)
+        public WeightedScore(IGlycoPeptide glycoPeptide, 
+            double alpha, double beta, Dictionary<MassType, double> weights)
         {
-            this.extraScore = 0.0;
             this.glycoPeptide = glycoPeptide;
 
             this.alpha = alpha;
@@ -44,21 +43,6 @@ namespace GlycoSeqClassLibrary.Analyze.Score
             {
                 theory[type] = (glycoPeptide as IGlycoPeptideMassProxy).GetMass(type).Count;
             }
-        }
-
-        private double ComputeScore()
-        {
-            double score = 0;
-            double scale = 1.0;
-            foreach(MassType type in matches.Keys)
-            {
-                scale *= Math.Pow(matches[type].Count / theory[type], weights[type]);
-            }
-            foreach (MassType type in matches.Keys)
-            {
-                score += matches[type].Sum() * scale;
-            }
-            return score;
         }
 
         private void AddScoreWithType(IPeak peak, MassType type)
@@ -98,7 +82,17 @@ namespace GlycoSeqClassLibrary.Analyze.Score
 
         public void AddScore(IScore other)
         {
-            extraScore += other.GetScore() ;
+            foreach (KeyValuePair<MassType, List<double>> item in (other as WeightedScore).matches)
+            {
+                if (matches.ContainsKey(item.Key))
+                {
+                    matches[item.Key].AddRange(item.Value);
+                }
+                else
+                {
+                    matches[item.Key] = item.Value;
+                }
+            }
         }
 
         public IGlycoPeptide GetGlycoPeptide()
@@ -108,7 +102,22 @@ namespace GlycoSeqClassLibrary.Analyze.Score
 
         public double GetScore()
         {
-            return ComputeScore() + extraScore;
+            double score = 0;
+            foreach (MassType type in matches.Keys)
+            {
+                score += GetScore(type);
+            }
+            return score;
+        }
+
+        public double GetScore(MassType type)
+        {
+            if (matches.ContainsKey(type))
+            {
+                double scale = Math.Pow(matches[type].Count / theory[type], weights[type]);
+                return matches[type].Sum() * scale;
+            }
+            return 0;
         }
     }
 }

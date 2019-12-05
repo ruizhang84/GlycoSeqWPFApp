@@ -33,7 +33,7 @@ namespace GlycoSeqClassLibrary.Engine.SearchEThcD
             ISearchEThcD searchEThcDRunner,
             IResults results,
             IReportProducer reportProducer,
-            double pesudoMass = 40.0):
+            double pesudoMass = -526.7728):
             base(proteinCreator, peptideCreator, glycanCreator, spectrumFactory,
                 spectrumProcessing, monoMassSpectrumGetter, precursorMatcher, spectrumFilter, searchEThcDRunner, results, reportProducer)
         {
@@ -54,13 +54,14 @@ namespace GlycoSeqClassLibrary.Engine.SearchEThcD
             if (spectrum.GetMSnOrder() < 2)
             {
                 return;
-            } 
+            }
 
             // ISpectrum filter
             if (spectrumFilter.Filter(spectrum)) return;
+            // Spectrum Processing
+            spectrumProcessing.Process(spectrum);
 
             // precursor
-            spectrumProcessing.Process(spectrum);
             List<IGlycoPeptide> glycoPeptides = precursorMatcher.Match(spectrum, monoMass);
             double charge = (spectrum as ISpectrumMSn).GetParentCharge();
             List<IGlycoPeptide> decoyGlycoPeptides = precursorMatcher.Match(spectrum, monoMass + pesudoMass / charge);

@@ -81,15 +81,16 @@ namespace GlycoSeqClassLibrary.Analyze.Reporter
 
         public override void Report(IResults results, int start, int end)
         {
-            scoreCutoff = GetScoreCutoff(results, start, end);
+            //scoreCutoff = GetScoreCutoff(results, start, end);
+            scoreCutoff = 0;
             if (InitSucess(scoreCutoff))
             {
                 for (int scanNum = start; scanNum <= end; scanNum++)
                 {
                     if (results.Contains(scanNum))
                     {
-                        //List<IScore> scores = results.GetResult(scanNum);
-                        List<IScore> scores = results.GetResult(scanNum).Where(score => !(score as IFDRScoreProxy).IsDecoy()).ToList();
+                        List<IScore> scores = results.GetResult(scanNum);
+                        //List<IScore> scores = results.GetResult(scanNum).Where(score => !(score as IFDRScoreProxy).IsDecoy()).ToList();
                         ReportLines(results.GetSpectrum(scanNum), scores, scoreCutoff);
                     }
                 }

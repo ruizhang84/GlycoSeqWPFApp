@@ -13,6 +13,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ThermoRawDll", "ThermoRawDl
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThermoRawClassLibrary", "ThermoRawClassLibrary\ThermoRawClassLibrary.csproj", "{EDA4B828-4879-49DF-8ACE-1126BA42F27A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleAppRun", "ConsoleAppRun\ConsoleAppRun.csproj", "{058058EB-0322-4DBC-8EEE-CB5972F1FE7F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -81,6 +83,18 @@ Global
 		{EDA4B828-4879-49DF-8ACE-1126BA42F27A}.Release|x64.Build.0 = Release|Any CPU
 		{EDA4B828-4879-49DF-8ACE-1126BA42F27A}.Release|x86.ActiveCfg = Release|Any CPU
 		{EDA4B828-4879-49DF-8ACE-1126BA42F27A}.Release|x86.Build.0 = Release|Any CPU
+		{058058EB-0322-4DBC-8EEE-CB5972F1FE7F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{058058EB-0322-4DBC-8EEE-CB5972F1FE7F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{058058EB-0322-4DBC-8EEE-CB5972F1FE7F}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{058058EB-0322-4DBC-8EEE-CB5972F1FE7F}.Debug|x64.Build.0 = Debug|Any CPU
+		{058058EB-0322-4DBC-8EEE-CB5972F1FE7F}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{058058EB-0322-4DBC-8EEE-CB5972F1FE7F}.Debug|x86.Build.0 = Debug|Any CPU
+		{058058EB-0322-4DBC-8EEE-CB5972F1FE7F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{058058EB-0322-4DBC-8EEE-CB5972F1FE7F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{058058EB-0322-4DBC-8EEE-CB5972F1FE7F}.Release|x64.ActiveCfg = Release|Any CPU
+		{058058EB-0322-4DBC-8EEE-CB5972F1FE7F}.Release|x64.Build.0 = Release|Any CPU
+		{058058EB-0322-4DBC-8EEE-CB5972F1FE7F}.Release|x86.ActiveCfg = Release|Any CPU
+		{058058EB-0322-4DBC-8EEE-CB5972F1FE7F}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
