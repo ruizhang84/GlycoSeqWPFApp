@@ -50,6 +50,8 @@ namespace GlycoSeqClassLibrary.Analyze.Reporter
                 writer.Write("Peptide score, ");
                 writer.Write("mz, ");
                 writer.Write("charge, ");
+                writer.Write("score, ");
+                writer.Write("cutoff score, ");
                 writer.WriteLine();
                 return true;
             }
@@ -103,6 +105,8 @@ namespace GlycoSeqClassLibrary.Analyze.Reporter
                     writer.Write(score.GetScore(MassType.Peptide).ToString() + ", ");
                     writer.Write((score.GetSpectrum() as ISpectrumMSn).GetParentMZ().ToString() + ", ");
                     writer.Write((score.GetSpectrum() as ISpectrumMSn).GetParentCharge().ToString() + ", ");
+                    writer.Write(score.GetProbability().ToString() + ", ");
+                    writer.Write(cutoff + ", ");
                     writer.WriteLine();
                 }
                 idx++;
@@ -138,6 +142,7 @@ namespace GlycoSeqClassLibrary.Analyze.Reporter
             // training
             SVMParameter parameter = new SVMParameter();
             parameter.Probability = true;
+            parameter.Kernel = SVMKernelType.LINEAR;
             model = problem.Train(parameter);
         }
 

@@ -12,7 +12,7 @@ using GlycoSeqClassLibrary.Model.Spectrum;
 
 namespace ConsoleAppRun
 {
-    class Program
+    public class Program
     {
         public static int GetScan(string name)
         {
@@ -21,7 +21,7 @@ namespace ConsoleAppRun
             foreach (Match m in mc)
             {
                 GroupCollection data = m.Groups;
-                
+
                 int.TryParse(data[1].ToString(), out scan);
                 return scan;
             }
@@ -48,23 +48,21 @@ namespace ConsoleAppRun
             }
         }
 
-        public class  CosInfo
+        public class SpectramInfo
         {
-            public string Name { get; set; }
-            public int ScanA { get; set; }
-            public int ScanB { get; set; }
-            public double cos { get; set; }
-            public CosInfo(string Name, int ScanA, int ScanB, double cos)
+            public ISpectrum Spectrum { get; set; }
+            public int ScanNum { get; set; }
+            public string FileName { get; set; }
+            public SpectramInfo(ISpectrum spectrum, int scan, string file)
             {
-                this.Name = Name;
-                this.ScanA = ScanA;
-                this.ScanB = ScanB;
-                this.cos = cos;
+                Spectrum = spectrum;
+                ScanNum = scan;
+                FileName = file;
             }
         }
 
-        public static void CosCompute(string fileName, 
-            List<CosInfo> cosInfos, Dictionary<string, List<int>> scanInfo, double tol = 0.01)
+        public static void ReadRaw(string fileName, Dictionary<string, List<int>> scanInfo,
+            Dictionary<string, List<SpectramInfo>> spectraInfo)
         {
             var builder = new ContainerBuilder();
             builder.RegisterModule(new TopPeakPickingDelegatorModule() { MaxPeaks = 100 });
@@ -81,44 +79,89 @@ namespace ConsoleAppRun
                 foreach (string key in scanInfo.Keys)
                 {
                     List<int> scans = scanInfo[key];
-                    if (scans.Count < 2) continue;
-                    for (int i = 0; i < scans.Count - 1; i++)
+                    foreach(int scan in scans)
                     {
-
-                        for (int j = i + 1; j < scans.Count; j++)
+                        if (!spectraInfo.ContainsKey(key))
                         {
-                            ISpectrum spectrumA = spectrumFacotry.GetSpectrum(scans[i]);
-                            ISpectrum spectrumB = spectrumFacotry.GetSpectrum(scans[j]);
-                            double cons = calculator.computeCos(spectrumA, spectrumB, tol);
-                            cosInfos.Add(new CosInfo(key, scans[i], scans[j], cons));
+                            spectraInfo[key] = new List<SpectramInfo>();
                         }
+                        spectraInfo[key].Add(new SpectramInfo(spectrumFacotry.GetSpectrum(scan), scan, fileName));
                     }
+                    
                 }
+            }
+
+        }
+
+        public class CosInfo
+        {
+            public string Name { get; set; }
+            public string FileA { get; set; }
+            public string FileB { get; set; }
+            public int ScanA { get; set; }
+            public int ScanB { get; set; }
+            public double cos { get; set; }
+            public CosInfo(string Name, int ScanA, int ScanB, string FileA, string FileB, double cos)
+            {
+                this.Name = Name;
+                this.ScanA = ScanA;
+                this.ScanB = ScanB;
+                this.FileA = FileA;
+                this.FileB = FileB;
+                this.cos = cos;
             }
         }
 
-        public static void WriteCSV(string output, List<CosInfo> cosInfos)
+        public static void CosCompute(List<CosInfo> cosInfos, 
+            Dictionary<string, List<SpectramInfo>> spectraInfo, double tol = 0.01)
+        {
+            SpectrumCosineSimilarity calculator = new SpectrumCosineSimilarity();
+            foreach (string key in spectraInfo.Keys)
+            {
+                List<SpectramInfo> spectra = spectraInfo[key];
+                if (spectra.Count < 2) continue;
+                for (int i = 0; i < spectra.Count - 1; i++)
+                {
+
+                    for (int j = i + 1; j < spectra.Count; j++)
+                    {
+                        ISpectrum spectrumA = spectra[i].Spectrum;
+                        ISpectrum spectrumB = spectra[j].Spectrum;
+                        double cons = calculator.computeCos(spectrumA, spectrumB, tol);
+                        cosInfos.Add(new CosInfo(key, spectra[i].ScanNum, spectra[j].ScanNum, 
+                            spectra[i].FileName, spectra[j].FileName, cons));
+                    }
+                }
+            }
+            
+        }
+
+        public static void WriteCSV(string output, List<CosInfo> cosInfos, 
+            double cutoff = 0.7)
         {
             try
             {
                 FileStream ostrm = new FileStream(output, FileMode.OpenOrCreate, FileAccess.Write);
                 StreamWriter writer = new StreamWriter(ostrm);
                 writer.Write("Glycopeptide, ");
-                writer.Write("ScanA, ");
-                writer.Write("ScanB, ");
+                writer.Write("SpectrumA: ScanA, ");
+                writer.Write("SpectrumB: ScanB, ");
                 writer.Write("Cosine, ");
                 writer.WriteLine();
-                foreach(CosInfo info in cosInfos)
+                foreach (CosInfo info in cosInfos)
                 {
-                    writer.Write(info.Name);
-                    writer.Write(",");
-                    writer.Write(info.ScanA);
-                    writer.Write(",");
-                    writer.Write(info.ScanB);
-                    writer.Write(",");
-                    writer.Write(info.cos);
-                    writer.Write(",");
-                    writer.WriteLine();
+                    if (info.cos < cutoff)
+                    {
+                        writer.Write(info.Name);
+                        writer.Write(",");
+                        writer.Write(info.FileA + " : " + info.ScanA.ToString());
+                        writer.Write(",");
+                        writer.Write(info.FileB + " : " + info.ScanB.ToString());
+                        writer.Write(",");
+                        writer.Write(info.cos);
+                        writer.Write(",");
+                        writer.WriteLine();
+                    }
                 }
                 writer.Flush();
             }
@@ -129,118 +172,22 @@ namespace ConsoleAppRun
             }
         }
 
-        public static int GetParent(int num, Dictionary<int, int> parent)
-        {
-            if (parent[num] == num) return num;
-            return GetParent(parent[num], parent);
-        }
-        public static void GetCluster(List<CosInfo> cosInfos,
-            Dictionary<int, List<int>> clusters,
-            Dictionary<int, string> names,
-            double cutoff)
-        {
-            Dictionary<int, int> parent = new Dictionary<int, int>();
-            Dictionary<int, int> rank = new Dictionary<int, int>();
-            
-
-            foreach (CosInfo info in cosInfos)
-            {
-                if (info.cos >= cutoff)
-                {
-                    if (!parent.ContainsKey(info.ScanA))
-                    {
-                        parent[info.ScanA] = info.ScanA;
-                        names[info.ScanA] = info.Name;
-                        rank[info.ScanA] = 1;
-                    }
-                    if (!parent.ContainsKey(info.ScanB))
-                    {
-                        parent[info.ScanB] = info.ScanB;
-                        names[info.ScanB] = info.Name;
-                        rank[info.ScanB] = 1;
-                    }
-
-                    // not in the same group, merge
-                    int parentA = GetParent(info.ScanA, parent);
-                    int parentB = GetParent(info.ScanB, parent);
-                    if (parentA != parentB)
-                    {
-                       if (rank[parentA] > rank[parentB])
-                        {
-                            parent[parentA] = parentB;
-                        }
-                        else
-                        {
-                            if (rank[parentA] == rank[parentB])
-                            {
-                                rank[parentA]++;
-                            }
-                            parent[parentB] = parentA;
-                        }
-                    }
-                }
-            }
-            
-            foreach(int scan in parent.Keys)
-            {
-                int p = GetParent(scan, parent);
-                if (!clusters.ContainsKey(p))
-                {
-                    clusters[p] = new List<int>();
-                }
-                clusters[p].Add(scan);
-            }
-        }
-        public static void WriteClusterCSV(string output, 
-            Dictionary<int, List<int>> clusters, Dictionary<int, string> names,
-            Dictionary<string, List<int>> scanInfos)
-        {
-            try
-            {
-                FileStream ostrm = new FileStream(output, FileMode.OpenOrCreate, FileAccess.Write);
-                StreamWriter writer = new StreamWriter(ostrm);
-                writer.Write("Glycopeptide, ");
-                writer.Write("Scans (clustered), ");
-                writer.Write("Scans (all), ");
-                writer.WriteLine();
-                foreach (int i in clusters.Keys)
-                {
-                    //if (clusters[i].Count < 2) continue;
-                    writer.Write(names[i]);
-                    writer.Write(",");
-                    writer.Write(string.Join(";", clusters[i]));
-                    writer.Write(",");
-                    writer.Write(string.Join(";", scanInfos[names[i]]));
-                    writer.Write(",");
-                    writer.WriteLine();
-                }
-                writer.Flush();
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("Cannot open file!");
-                Console.WriteLine(e.Message);
-            }
-        }
-
-        public static void Run(string name)
+        public static void Run(List<string> files)
         {
             string dir = @"C:\Users\iruiz\Desktop\app3\";
-            //string name = @"H96_R2";
-
-            Dictionary<string, List<int>> scanInfos = new Dictionary<string, List<int>>();
-            ReadCSV(dir + name + "_Byonic.csv", scanInfos);
-
+            
             List<CosInfo> cosInfos = new List<CosInfo>();
-            CosCompute(dir + @"\ZC_20171218_" + name + ".raw", cosInfos, scanInfos);
+            Dictionary<string, List<SpectramInfo>> spectraInfo = new Dictionary<string, List<SpectramInfo>>();
+            foreach (string name in files)//string name = @"H96_R2";
+            {
+                Dictionary<string, List<int>> scanInfos = new Dictionary<string, List<int>>();
+                ReadCSV(dir + name + "_Byonic.csv", scanInfos);
+                ReadRaw(dir + @"ZC_20171218_" + name + ".raw", scanInfos, spectraInfo);
+            }
 
-            WriteCSV(dir + name + "_cos.csv", cosInfos);
-
-            Dictionary<int, List<int>> clusters = new Dictionary<int, List<int>>();
-            Dictionary<int, string> names = new Dictionary<int, string>();
-            GetCluster(cosInfos, clusters, names, 0.7);
-
-            WriteClusterCSV(dir + name + "_cluster.csv", clusters, names, scanInfos);
+            CosCompute(cosInfos, spectraInfo, 0.01);
+            WriteCSV(dir + "result_cos.csv", cosInfos, 0.65);
+           
         }
 
         static void Main(string[] args)
@@ -253,10 +200,8 @@ namespace ConsoleAppRun
                 @"H95_R1", @"H95_R2",
                 @"H96_R1", @"H96_R2"
             };
-            foreach(string filename in files)
-            {
-                Run(filename);
-            }
+            Run(files);
+            
 
         }
     }
