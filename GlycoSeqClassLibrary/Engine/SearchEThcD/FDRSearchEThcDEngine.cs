@@ -71,23 +71,25 @@ namespace GlycoSeqClassLibrary.Engine.SearchEThcD
             foreach (IGlycoPeptide glycoPeptide in glycoPeptides)
             {
                 IScore score = searchEThcDRunner.Search(spectrum, glycoPeptide);
-                IScoreProxy scoreProxy = new FDRScoreProxy(score, true);
-                scores.Add(scoreProxy);
-                //Console.WriteLine();
+                if (score.GetScore() > 0)
+                {
+                    IScoreProxy scoreProxy = new FDRScoreProxy(score, true);
+                    scores.Add(scoreProxy);
+                }
             }
 
-            //Console.WriteLine("Decoy:");
             List<IScore> decoyScores = new List<IScore>();
             foreach (IGlycoPeptide decoyGlycoPeptide in decoyGlycoPeptides)
             {
                 decoyGlycoPeptide.SetPeptide(decoyGlycoPeptide.GetPeptide().Clone());
                 decoyGlycoPeptide.GetPeptide().SetSequence(Reverse(decoyGlycoPeptide.GetPeptide().GetSequence()));
                 IScore score = searchEThcDRunner.Search(spectrum, decoyGlycoPeptide);
-                IScoreProxy scoreProxy = new FDRScoreProxy(score, false);
-                decoyScores.Add(scoreProxy);
+                if (score.GetScore() > 0)
+                {
+                    IScoreProxy scoreProxy = new FDRScoreProxy(score, false);
+                    decoyScores.Add(scoreProxy);
+                }
             }
-            //Console.WriteLine();
-            //Console.WriteLine();
 
             // save results
             List<IScore> finalScore = new List<IScore>();

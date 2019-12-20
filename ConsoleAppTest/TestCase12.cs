@@ -95,16 +95,12 @@ namespace ConsoleAppTest
             return numerator / denominator;
         }
    
-        public void Run()
+        public static void Runner(string filename)
         {
-            var watch = new System.Diagnostics.Stopwatch();
-            watch.Start();
-
-            Dictionary<string, List<int>> scanInfo = new Dictionary<string, List<int>>();
-
             // read csv
-            using (var reader = new StreamReader(@"C:\Users\iruiz\Desktop\app\result.csv"))
+            using (var reader = new StreamReader(@"C:\Users\iruiz\Desktop\app3\" + filename + "_Byonic.csv"))
             {
+                Dictionary<string, List<int>> scanInfo = new Dictionary<string, List<int>>();
                 while (!reader.EndOfStream)
                 {
                     var line = reader.ReadLine();
@@ -125,63 +121,114 @@ namespace ConsoleAppTest
                         scanInfo[key].Add(scan);
                     }
                 }
+                Console.WriteLine(filename);
+                Console.WriteLine(scanInfo.Count);
+                
             }
+        }
 
+        public void Run()
+        {
+            var watch = new System.Diagnostics.Stopwatch();
+            watch.Start();
 
-            var builder = new ContainerBuilder();
-            builder.RegisterModule(new TopPeakPickingDelegatorModule() { MaxPeaks = 100 });
-            builder.RegisterModule(new SpectrumProcessingModule() { ScaleFactor = 1.0 });
-            builder.RegisterModule(new ThermoRawSpectrumModule());
-
-            IContainer Container = builder.Build();
-
-            using (var scope = Container.BeginLifetimeScope())
+            List<string> files = new List<string>()
             {
-                var spectrumFacotry = scope.Resolve<ISpectrumFactory>();
-                spectrumFacotry.Init(@"C:\Users\iruiz\Desktop\app\ZC_20171218_H95_R1.raw");
-
-                double pairs = 0;
-                double count = 0;
-                int count2 = 0;
-                int count3 = 0;
-                foreach(string key in scanInfo.Keys)
-                {
-                    List<int> scans = scanInfo[key];
-                    if (scans.Count < 2) continue;
-                    bool flag = false;
-                    for (int i = 0; i < scans.Count-1; i++)
-                    {
-                       
-                        for(int j = i+1; j < scans.Count; j++)
-                        {
-                            ISpectrum spectrumA = spectrumFacotry.GetSpectrum(scans[i]);
-                            ISpectrum spectrumB = spectrumFacotry.GetSpectrum(scans[j]);
-                            double cons = computeCos(spectrumA.GetPeaks(), spectrumB.GetPeaks(), 0.01);
-                            if (cons < 0.3)
-                            {
-                                Console.WriteLine("spectrum: " + scans[i].ToString()
-                                    + " " + scans[j].ToString());
-                                Console.WriteLine(cons);
-                                pairs++;
-                                flag = true;
-                            }
-                            count3++;
-                        }
-                        
-                    }
-                    count2 += scans.Count;
-                    
-                    if (flag)
-                        count++;
-                    Console.WriteLine(key);
-                }
-                Console.WriteLine(count2);
-                Console.WriteLine(count3);
-                Console.WriteLine($"There are {count} spectrum and {pairs} pairs");
+                @"H68_R1", @"H68_R2",
+                @"H84_R1", @"H84_R2",
+                @"H89_R1", @"H89_R2",
+                @"H95_R1", @"H95_R2",
+                @"H96_R1", @"H96_R2"
+            };
+            foreach (string filename in files)
+            {
+                Runner(filename);
             }
 
-            Console.WriteLine($"Execution Time: {watch.ElapsedMilliseconds} ms");
             Console.Read();
+
+            //// read csv
+            //using (var reader = new StreamReader(@"C:\Users\iruiz\Desktop\app\result.csv"))
+            //{
+            //    Dictionary<string, List<int>> scanInfo = new Dictionary<string, List<int>>();
+            //    while (!reader.EndOfStream)
+            //    {
+            //        var line = reader.ReadLine();
+            //        var values = line.Split(',');
+
+            //        string key = values[3] + values[5];
+            //        if (!scanInfo.ContainsKey(key))
+            //        {
+            //            scanInfo[key] = new List<int>();
+            //        }
+
+            //        MatchCollection mc = Regex.Matches(values[24], @"scan=(\d+)");
+            //        foreach (Match m in mc)
+            //        {
+            //            GroupCollection data = m.Groups;
+            //            int scan = -1;
+            //            Int32.TryParse(data[1].ToString(), out scan);
+            //            scanInfo[key].Add(scan);
+            //        }
+            //    }
+            //    Console.WriteLine(scanInfo.Count);
+            //}
+
+
+            //var builder = new ContainerBuilder();
+            //builder.RegisterModule(new TopPeakPickingDelegatorModule() { MaxPeaks = 100 });
+            //builder.RegisterModule(new SpectrumProcessingModule() { ScaleFactor = 1.0 });
+            //builder.RegisterModule(new ThermoRawSpectrumModule());
+
+            //IContainer Container = builder.Build();
+
+            //using (var scope = Container.BeginLifetimeScope())
+            //{
+            //    var spectrumFacotry = scope.Resolve<ISpectrumFactory>();
+            //    spectrumFacotry.Init(@"C:\Users\iruiz\Desktop\app\ZC_20171218_H95_R1.raw");
+
+            //    double pairs = 0;
+            //    double count = 0;
+            //    int count2 = 0;
+            //    int count3 = 0;
+            //    foreach(string key in scanInfo.Keys)
+            //    {
+            //        List<int> scans = scanInfo[key];
+            //        if (scans.Count < 2) continue;
+            //        bool flag = false;
+            //        for (int i = 0; i < scans.Count-1; i++)
+            //        {
+
+            //            for(int j = i+1; j < scans.Count; j++)
+            //            {
+            //                ISpectrum spectrumA = spectrumFacotry.GetSpectrum(scans[i]);
+            //                ISpectrum spectrumB = spectrumFacotry.GetSpectrum(scans[j]);
+            //                double cons = computeCos(spectrumA.GetPeaks(), spectrumB.GetPeaks(), 0.01);
+            //                if (cons < 0.3)
+            //                {
+            //                    Console.WriteLine("spectrum: " + scans[i].ToString()
+            //                        + " " + scans[j].ToString());
+            //                    Console.WriteLine(cons);
+            //                    pairs++;
+            //                    flag = true;
+            //                }
+            //                count3++;
+            //            }
+
+            //        }
+            //        count2 += scans.Count;
+
+            //        if (flag)
+            //            count++;
+            //        Console.WriteLine(key);
+            //    }
+            //    Console.WriteLine(count2);
+            //    Console.WriteLine(count3);
+            //    Console.WriteLine($"There are {count} spectrum and {pairs} pairs");
+            //}
+
+            //Console.WriteLine($"Execution Time: {watch.ElapsedMilliseconds} ms");
+            //Console.Read();
         }
 
     }

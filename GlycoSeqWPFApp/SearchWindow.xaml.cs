@@ -88,7 +88,7 @@ namespace GlycoSeqWPFApp
             });
 
             builder.RegisterModule(new FastaProteinModule());
-            builder.RegisterModule(new FDRCSVReportModule() { FDR = SearchParameters.Access.FDRValue });
+            builder.RegisterModule(new FDRSVMReportModule() { FDR = SearchParameters.Access.FDRValue });
 
             builder.RegisterModule(new MonoMassSpectrumGetterModule()
             {

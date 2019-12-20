@@ -59,7 +59,7 @@ namespace GlycoSeqClassLibrary.Search.Process.MonoMass
                 return monoMass;
             double isoMZ = mz - Proton / charge * isotopic;
             List<IPoint> matched = matcher.Search(new GeneralPoint(isoMZ));
-            return matched.OrderBy(x => (x as PeakPoint).Intensity).First().GetValue();
+            return matched.OrderBy(x => Math.Abs((x as PeakPoint).MZ - isoMZ)).First().GetValue();
         }
 
     }

@@ -137,7 +137,7 @@ namespace ConsoleAppRun
         public static void GetCluster(List<CosInfo> cosInfos,
             Dictionary<int, List<int>> clusters,
             Dictionary<int, string> names,
-            double cutoff = 0.7)
+            double cutoff)
         {
             Dictionary<int, int> parent = new Dictionary<int, int>();
             Dictionary<int, int> rank = new Dictionary<int, int>();
@@ -192,21 +192,25 @@ namespace ConsoleAppRun
             }
         }
         public static void WriteClusterCSV(string output, 
-            Dictionary<int, List<int>> clusters, Dictionary<int, string> names)
+            Dictionary<int, List<int>> clusters, Dictionary<int, string> names,
+            Dictionary<string, List<int>> scanInfos)
         {
             try
             {
                 FileStream ostrm = new FileStream(output, FileMode.OpenOrCreate, FileAccess.Write);
                 StreamWriter writer = new StreamWriter(ostrm);
                 writer.Write("Glycopeptide, ");
-                writer.Write("Scans, ");
+                writer.Write("Scans (clustered), ");
+                writer.Write("Scans (all), ");
                 writer.WriteLine();
                 foreach (int i in clusters.Keys)
                 {
-                    if (clusters[i].Count < 2) continue;
+                    //if (clusters[i].Count < 2) continue;
                     writer.Write(names[i]);
                     writer.Write(",");
                     writer.Write(string.Join(";", clusters[i]));
+                    writer.Write(",");
+                    writer.Write(string.Join(";", scanInfos[names[i]]));
                     writer.Write(",");
                     writer.WriteLine();
                 }
@@ -219,10 +223,10 @@ namespace ConsoleAppRun
             }
         }
 
-        static void Main(string[] args)
+        public static void Run(string name)
         {
             string dir = @"C:\Users\iruiz\Desktop\app3\";
-            string name = @"H96_R2";
+            //string name = @"H96_R2";
 
             Dictionary<string, List<int>> scanInfos = new Dictionary<string, List<int>>();
             ReadCSV(dir + name + "_Byonic.csv", scanInfos);
@@ -234,9 +238,26 @@ namespace ConsoleAppRun
 
             Dictionary<int, List<int>> clusters = new Dictionary<int, List<int>>();
             Dictionary<int, string> names = new Dictionary<int, string>();
-            GetCluster(cosInfos, clusters, names);
+            GetCluster(cosInfos, clusters, names, 0.7);
 
-            WriteClusterCSV(dir + name + "_cluster.csv", clusters, names);
+            WriteClusterCSV(dir + name + "_cluster.csv", clusters, names, scanInfos);
+        }
+
+        static void Main(string[] args)
+        {
+            List<string> files = new List<string>()
+            {
+                @"H68_R1", @"H68_R2",
+                @"H84_R1", @"H84_R2",
+                @"H89_R1", @"H89_R2",
+                @"H95_R1", @"H95_R2",
+                @"H96_R1", @"H96_R2"
+            };
+            foreach(string filename in files)
+            {
+                Run(filename);
+            }
+
         }
     }
 }

@@ -52,6 +52,9 @@
     <Reference Include="Autofac, Version=4.9.4.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
       <HintPath>..\packages\Autofac.4.9.4\lib\net45\Autofac.dll</HintPath>
     </Reference>
+    <Reference Include="LibSVMsharp, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64">
+      <HintPath>..\packages\LibSVMsharp.1.2.5\lib\net45\LibSVMsharp.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -76,9 +79,15 @@
     <Compile Include="Analyze\IScoreProxy.cs" />
     <Compile Include="Analyze\Reporter\CSVReportProducer.cs" />
     <Compile Include="Analyze\Reporter\FDRCSVReportProducer.cs" />
+    <Compile Include="Analyze\Reporter\FDRSVMProducer.cs" />
+    <Compile Include="Analyze\Reporter\SVMProducer.cs" />
     <Compile Include="Analyze\Result\GeneralResults.cs" />
     <Compile Include="Analyze\Score\FDRScoreProxy.cs" />
     <Compile Include="Analyze\Score\IFDRScoreProxy.cs" />
+    <Compile Include="Analyze\Score\IProbScoreProxy.cs" />
+    <Compile Include="Analyze\Score\ProbScoreProxy.cs" />
+    <Compile Include="Analyze\Score\VectorScore.cs" />
+    <Compile Include="Analyze\Score\VectorScoreFactory.cs" />
     <Compile Include="Analyze\Score\WeightedScore.cs" />
     <Compile Include="Analyze\Score\WeightedScoreFactory.cs" />
     <Compile Include="Builder\Chemistry\Glycan\GeneralTableNGlycanCreator.cs" />
@@ -121,6 +130,7 @@
     <Compile Include="Engine\EngineSetup\Protein\FastaProteinModule.cs" />
     <Compile Include="Engine\EngineSetup\Report\CSVReportModule.cs" />
     <Compile Include="Engine\EngineSetup\Report\FDRCSVReportModule.cs" />
+    <Compile Include="Engine\EngineSetup\Report\FDRSVMReportModule.cs" />
     <Compile Include="Engine\EngineSetup\Search\MonoMassSpectrumGetterModule.cs" />
     <Compile Include="Engine\EngineSetup\Search\PrecursorMatcherModule.cs" />
     <Compile Include="Engine\EngineSetup\Search\SearchEThcDModule.cs" />
@@ -182,6 +192,7 @@
     <Compile Include="Util\Model\FindPTMPosition.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="LIBSVM_COPYRIGHT" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -204,6 +215,9 @@
       <Project>{a3d135d7-eae6-44d4-a1a4-5fe6ae4cb496}</Project>
       <Name>ThermoRawDll</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="libsvm.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

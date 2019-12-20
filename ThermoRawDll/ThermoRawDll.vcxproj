@@ -169,6 +169,11 @@
     </ClCompile>
     <ClCompile Include="ThermoRawDll.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="libsvm.dll" />
+    <None Include="LIBSVM_COPYRIGHT" />
+    <None Include="packages.config" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

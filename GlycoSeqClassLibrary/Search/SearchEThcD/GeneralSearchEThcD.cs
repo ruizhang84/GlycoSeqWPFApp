@@ -40,9 +40,9 @@ namespace GlycoSeqClassLibrary.Search.SearchEThcD
                     IPoint target = new GeneralPoint(SpectrumCalcMass.Instance.Compute(peak.GetMZ(), c));
                     if (matcher.Found(target))
                     {
-                        Console.WriteLine(glycoPeptide.GetPeptide().GetSequence());
-                        Console.WriteLine(glycoPeptide.GetGlycan().GetName());
-                        Console.WriteLine(peak.GetMZ().ToString() + " " + c.ToString() + ": " + type.ToString());
+                        //Console.WriteLine(glycoPeptide.GetPeptide().GetSequence());
+                        //Console.WriteLine(glycoPeptide.GetGlycan().GetName());
+                        //Console.WriteLine(peak.GetMZ().ToString() + " " + c.ToString() + ": " + type.ToString());
                         switch (type)
                         {
                             case MassType.Core:
@@ -72,9 +72,9 @@ namespace GlycoSeqClassLibrary.Search.SearchEThcD
             List<IPeak> peaks = spectrum.GetPeaks();
             IScore score = scoreFactory.CreateScore(glycoPeptide);
 
-            ComputeSearchScore(score, peaks, charge, glycoPeptide, MassType.Glycan);
             ComputeSearchScore(score, peaks, charge, glycoPeptide, MassType.Core);
             ComputeSearchScore(score, peaks, charge, glycoPeptide, MassType.Branch);
+            ComputeSearchScore(score, peaks, charge, glycoPeptide, MassType.Glycan);
             ComputeSearchScore(score, peaks, charge, glycoPeptide, MassType.Peptide);
             return score;
         }

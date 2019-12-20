@@ -10,12 +10,12 @@ namespace GlycoSeqClassLibrary.Search.Process.MonoMass
 {
     public class PeakPoint : IPoint
     {
-        double mz;
+        public double MZ { get; set; }
         public double Intensity { get; set; }
 
         public PeakPoint(IPeak peak)
         {
-            mz = peak.GetMZ();
+            MZ = peak.GetMZ();
             Intensity = peak.GetIntensity();
         }
 
@@ -26,7 +26,7 @@ namespace GlycoSeqClassLibrary.Search.Process.MonoMass
 
         public double GetValue()
         {
-            return mz;
+            return MZ;
         }
     }
 }

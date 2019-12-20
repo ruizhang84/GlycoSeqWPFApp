@@ -30,10 +30,10 @@ namespace GlycoSeqWPFApp
         public int ThreadNums { get; set; } = 4;
         public double Alpah { get; set; } = 1.0;
         public double Beta { get; set; } = 0.0;
-        public double GlycanWeight { get; set; } = 1.0;
         public double CoreGlycanWeight { get; set; } = 1.0;
         public double BranchGlycanWeight { get; set; } = 1.0;
-        public double PeptideWeight { get; set; } = 0.0;
+        public double GlycanWeight { get; set; } = 1.0;
+        public double PeptideWeight { get; set; } = 1.0;
 
         //result
         public double FDRValue { get; set; } = 0.01;

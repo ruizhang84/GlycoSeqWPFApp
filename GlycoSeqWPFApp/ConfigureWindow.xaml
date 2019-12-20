@@ -130,13 +130,13 @@
                 <TextBox Name="Beta" Text="0.0" VerticalAlignment="Center" FontSize="12" Width="40"/>
             </StackPanel>
             <StackPanel Orientation="Horizontal" Grid.Row="3">
-                <Label Content="Matching Weight (w) : Glyco" />
-                <TextBox Name="GlycanWeight" Text="1.0" VerticalAlignment="Center" FontSize="12" Width="40"/>
-                <Label Content="Pentacore" />
+                <Label Content="Matching Weight (w) : Pentacore" />
                 <TextBox Name="CoreGlycanWeight" Text="1.0" VerticalAlignment="Center" FontSize="12" Width="40"/>
                 <Label Content="Branch" />
                 <TextBox Name="BranchGlycanWeight" Text="1.0" VerticalAlignment="Center" FontSize="12" Width="40"/>
-                <Label Content="Peptide"/>
+                <Label Content="Glycan"/>
+                <TextBox Name="GlycanWeight" Text="1.0" VerticalAlignment="Center" FontSize="12" Width="40"/>
+                <Label Content="Peptide" />
                 <TextBox Name="PeptideWeight" Text="0.0" VerticalAlignment="Center" FontSize="12" Width="40"/>
             </StackPanel>
             <Separator VerticalAlignment="Bottom" Grid.Row="4"/>

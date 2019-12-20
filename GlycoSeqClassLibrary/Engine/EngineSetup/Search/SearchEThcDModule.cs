@@ -34,7 +34,7 @@ namespace GlycoSeqClassLibrary.Engine.EngineSetup.Search
                 weights.Add(MassType.Branch, branchGlycanWeight);
                 weights.Add(MassType.Glycan, glycanWeight);
                 weights.Add(MassType.Peptide, peptideWeight);
-                IScoreFactory scoreFactory = new WeightedScoreFactory(alpha, beta, weights);
+                IScoreFactory scoreFactory = new VectorScoreFactory(alpha, beta, weights);
                 IGlycoPeptidePointsCreator glycoPeptidePointsCreator = new GeneralGlycoPeptideMassProxyPointsCreator();
 
                 return new GeneralSearchEThcD(matcherPeaks, scoreFactory, glycoPeptidePointsCreator);

@@ -151,16 +151,6 @@ namespace GlycoSeqWPFApp
                 return false;
             }
 
-            if (double.TryParse(GlycanWeight.Text, out value))
-            {
-                ConfigureParameters.Access.GlycanWeight = value;
-            }
-            else
-            {
-                MessageBox.Show("Glycan's weight value is invalid!");
-                return false;
-            }
-
             if (double.TryParse(CoreGlycanWeight.Text, out value))
             {
                 ConfigureParameters.Access.CoreGlycanWeight = value;
@@ -181,6 +171,16 @@ namespace GlycoSeqWPFApp
                 return false;
             }
 
+            if (double.TryParse(GlycanWeight.Text, out value))
+            {
+                ConfigureParameters.Access.GlycanWeight = value;
+            }
+            else
+            {
+                MessageBox.Show("Glycan's weight value is invalid!");
+                return false;
+            }
+
             if (double.TryParse(PeptideWeight.Text, out value))
             {
                 ConfigureParameters.Access.PeptideWeight = value;
@@ -190,6 +190,7 @@ namespace GlycoSeqWPFApp
                 MessageBox.Show("Peptide's weight value is invalid!");
                 return false;
             }
+
             return true;
         }
 
