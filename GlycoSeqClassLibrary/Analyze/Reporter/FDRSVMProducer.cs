@@ -52,6 +52,7 @@ namespace GlycoSeqClassLibrary.Analyze.Reporter
                 writer.Write("charge, ");
                 writer.Write("score, ");
                 writer.Write("cutoff score, ");
+                writer.Write("is decoy, ");
                 writer.WriteLine();
                 return true;
             }
@@ -107,6 +108,7 @@ namespace GlycoSeqClassLibrary.Analyze.Reporter
                     writer.Write((score.GetSpectrum() as ISpectrumMSn).GetParentCharge().ToString() + ", ");
                     writer.Write(score.GetProbability().ToString() + ", ");
                     writer.Write(cutoff + ", ");
+                    writer.Write(score.IsDecoy() + ", ");
                     writer.WriteLine();
                 }
                 idx++;
@@ -142,7 +144,7 @@ namespace GlycoSeqClassLibrary.Analyze.Reporter
             // training
             SVMParameter parameter = new SVMParameter();
             parameter.Probability = true;
-            parameter.Kernel = SVMKernelType.LINEAR;
+            parameter.Kernel = SVMKernelType.POLY;
             model = problem.Train(parameter);
         }
 
@@ -181,7 +183,7 @@ namespace GlycoSeqClassLibrary.Analyze.Reporter
         protected double GetScoreCutoff(List<IProbScoreProxy> probabilities, int start, int end)
         {
             // init
-            double cutoff = 0;
+            double cutoff = 1.0;
 
             // get score values for true and decoy results
             List<double> targets = new List<double>();
@@ -247,8 +249,9 @@ namespace GlycoSeqClassLibrary.Analyze.Reporter
                 double scoreCutoff = GetScoreCutoff(probabilities, start, end);
 
                 // report
-                List<IProbScoreProxy> scores = probabilities.
-                    Where(score => !(score as IFDRScoreProxy).IsDecoy()).ToList();
+                //List<IProbScoreProxy> scores = probabilities.
+                //    Where(score => !(score as IFDRScoreProxy).IsDecoy()).ToList();
+                List<IProbScoreProxy> scores = probabilities;
                 ReportLines(scores, scoreCutoff);
 
                 Exit();
